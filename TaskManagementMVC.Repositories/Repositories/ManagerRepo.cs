@@ -49,5 +49,21 @@ namespace TaskManagementMVC.Repositories.Repositories
 
             return sb.ToString();
         }
+
+        public TeamMembersViewModel GetTeamMembersData(int managerId)
+        {
+            var data = _context.AspNetUsers.Where(x => x.Id == managerId && x.RoleId == 3).ToList();
+
+            var viewModel = new TeamMembersViewModel();
+            //foreach (var item in data)
+            //{
+            //    viewModel.TeamMemberId[index(item)] = item.Id.IndexOf(item)];
+            //    viewModel.FirstName.Add(item.Name.Split(' ')[0]);
+            //    viewModel.LastName.Add(item.Name.Split(' ')[1]);
+            //    viewModel.Email.Add(item.Email);
+            //    viewModel.Role.Add(_context.UserRoles.Where(x => x.RoleId == item.RoleId).First().ToString()?? "Team Member");
+            //}
+            return new();
+        }
     }
 }

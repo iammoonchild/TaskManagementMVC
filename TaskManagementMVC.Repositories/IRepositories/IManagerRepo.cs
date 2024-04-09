@@ -9,6 +9,7 @@ namespace TaskManagementMVC.Repositories.IRepositories
 {
     public interface IManagerRepo
     {
+        TeamMembersViewModel GetTeamMembersData(int managerId);
         void SetTeamMembersData(TeamMembersViewModel viewModel);
     }
 }

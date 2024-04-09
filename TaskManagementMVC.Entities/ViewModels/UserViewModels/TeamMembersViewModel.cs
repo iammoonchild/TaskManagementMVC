@@ -8,6 +8,8 @@ namespace TaskManagementMVC.Entities.ViewModels.UserViewModels
 {
     public class TeamMembersViewModel
     {
+        public List<int> RoleId { get; set; }  
+        public List<long> TeamMemberId { get; set; }
         public List<string> FirstName { get; set; }
         public List<string> LastName { get; set; }
         public List<string> Email { get; set; }

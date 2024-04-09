@@ -17,6 +17,11 @@ namespace TaskManagementMVC.Services.Services
             _managerRepo = managerRepo;
         }
 
+        public TeamMembersViewModel GetTeamMembersData(int ManagerId)
+        {
+            return _managerRepo.GetTeamMembersData(ManagerId);
+        }
+
         public void SetTeamMembersData(TeamMembersViewModel viewModel)
         {
             _managerRepo.SetTeamMembersData(viewModel);

@@ -24,9 +24,11 @@ namespace TaskManagementMVC.Controllers
         [HttpPost]
         public IActionResult SetTeamMembersData(TeamMembersViewModel viewModel)
         {
+            var ManagerId = 6;
            var check =  viewModel.FirstName.First();
             _managerService.SetTeamMembersData(viewModel);
-            return Json(true);
+            TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
+            return View("CreateTeam", model);
         }
     }
     
