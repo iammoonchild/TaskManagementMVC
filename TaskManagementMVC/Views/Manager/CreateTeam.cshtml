@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Create Team";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Team Members</title>
+</head>
+
+<body>
+
+    <div class="container-fluid" style="height:100vh">
+        <div class="d-flex text-center flex-column h-100 m-auto">
+            <div class="h3 m-auto">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    Add Team Members
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Button trigger modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Team Members</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="teamMembersForm" class="" method="post">
+                        <div id="teamMembersContainer">
+                            <div class="team-member-wrapper">
+                                <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
+                                    <h5>Team Member</h5>
+                                    <button type="button" class="btn btn-danger delete-member">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="mb-3 form-floating">
+                                    <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
+                                    <label for="FirstName[]">First Name</label>
+
+                                </div>
+                                <div class="mb-3 form-floating">
+                                    <input type="text" class="form-control" name="LastName[]" placeholder="" required>
+                                    <label for="LastName[]">Last Name</label>
+
+                                </div>
+                                <div class="mb-3 form-floating">
+                                    <input type="email" class="form-control" name="Email[]" placeholder="" required>
+                                    <label for="Email[]">Email ID</label>
+
+                                </div>
+                                <div class="mb-3 form-floating">
+                                    <select class="form-select" name="Role[]" required>
+                                        <option value="">Select Role</option>
+                                        <option value="1">Team Lead</option>
+                                        <option value="2">Member</option>
+                                        <!-- Add more roles as needed -->
+                                    </select>
+                                    <label for="Role[]">Role</label>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary" id="addMore">Add More</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="saveTeamMembers">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/CreateTeamScript.js"></script>
+</body>
+
+</html>
