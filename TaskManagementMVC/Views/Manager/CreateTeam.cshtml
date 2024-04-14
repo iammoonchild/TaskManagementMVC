@@ -1,18 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model TaskManagementMVC.Entities.ViewModels.UserViewModels.TeamMembersViewModel;
 @{
+    Layout = null;
+    ViewData["Title"] = "Home Page";
     ViewBag.Title = "Create Team";
 }
-@if (TempData["LoginSuccess"] != null)
-{
-    Html.RenderPartial("_ToastSuccess", TempData["LoginSuccess"]);
-}
-@model TaskManagementMVC.Entities.ViewModels.UserViewModels.TeamMembersViewModel;
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +15,11 @@
 </head>
 
 <body>
-
+    @if (TempData["LoginSuccess"] != null)
+    {
+        Html.RenderPartial("_ToastSuccess", TempData["LoginSuccess"]);
+    }
+    <partial name="_HeaderPartial"/>
     <div class="container-fluid" style="height:100vh">
         @if (Model.GetTeamMembersData.Count != 0)
         {
@@ -46,7 +42,7 @@
                 <div class="h3 m-auto">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="bi bi-plus-circle-fill"></i>
-                        Add Team Members
+                        Create Team
                     </button>
 
                 </div>
@@ -60,7 +56,7 @@
                 <div class="h3 m-auto">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="bi bi-plus-circle-fill"></i>
-                        Add Team Members
+                        Create Team
                     </button>
 
                 </div>
@@ -74,11 +70,15 @@
         <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Team Members</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Create Team</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="teamMembersForm" class="" method="post">
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" name="TeamName" placeholder="" required>
+                            <label for="TeamName">Team Name</label>
+                        </div>
                         <div id="teamMembersContainer">
                             <div class="team-member-wrapper">
                                 <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">

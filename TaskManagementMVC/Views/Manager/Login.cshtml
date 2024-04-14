@@ -5,10 +5,7 @@
 @{
     Layout = null;
 }
-@if (TempData["LoginFailed"] != null)
-{
-    Html.RenderPartial("_ToastFailure", TempData["LoginFailed"]);
-}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,10 +47,24 @@
             text-align: right;
             margin-top: 10px;
         }
+
+        .toast-container {
+            position: fixed; /* Position the container fixed */
+            right: 20px; /* Position it 20px from the left edge */
+            top: 20px; /* Position it 20px from the top edge */
+            background-color: none; /* Example background color */
+            color: white; /* Example text color */
+            padding: 10px; /* Example padding */
+            border-radius: 5px; /* Example border radius */
+            z-index: 9999; /* Example z-index */
+        }
     </style>
 </head>
 <body>
-   
+    @if (TempData["LoginFailed"] != null)
+    {
+        Html.RenderPartial("_ToastFailure", TempData["LoginFailed"]);
+    }
     <div class="login-container w-75 w-lg-50">
         <div class="wrapper row justify-content-between">
             <div class="left col-md-5 d-none d-md-block border-end pe-4">
