@@ -18,7 +18,9 @@ namespace TaskManagementMVC.Controllers
 
         public IActionResult CreateTeam()
         {
-            return View();
+            var ManagerId = 6;
+            TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
+            return View(model);
         }
 
         [HttpPost]
@@ -27,8 +29,8 @@ namespace TaskManagementMVC.Controllers
             var ManagerId = 6;
            var check =  viewModel.FirstName.First();
             _managerService.SetTeamMembersData(viewModel);
-            TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
-            return View("CreateTeam", model);
+            
+            return View("CreateTeam");
         }
     }
     

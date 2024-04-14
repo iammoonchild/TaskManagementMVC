@@ -8,6 +8,7 @@
 @{
     ViewBag.Title = "Create Team";
 }
+@model TaskManagementMVC.Entities.ViewModels.UserViewModels.TeamMembersViewModel;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,17 +21,48 @@
 <body>
 
     <div class="container-fluid" style="height:100vh">
-        <div class="d-flex text-center flex-column h-100 m-auto">
-            <div class="h3 m-auto">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Add Team Members
-                </button>
+        @if (Model.GetTeamMembersData.Count != 0)
+        {
+            <div class="d-flex justify-content-center align-items-center">
+                @foreach (var items in Model.GetTeamMembersData)
+                {
+                    <div class="mx-1" style="width:150px">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img src="/images/memberavatar.png"
+                                 style="height:100px; width:100px" class="mx-auto" />
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="fs-5 text-wrap mx-4">@items.Name</span>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="d-flex text-center flex-column mt-5 mx-auto">
+                <div class="h3 m-auto">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Add Team Members
+                    </button>
+
+                </div>
 
             </div>
 
-        </div>
+        }
+        else
+        {
+            <div class="d-flex text-center flex-column h-100 m-auto">
+                <div class="h3 m-auto">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Add Team Members
+                    </button>
 
+                </div>
+
+            </div>
+        }
     </div>
     <!-- Button trigger modal -->
     <!-- Modal -->
