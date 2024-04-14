@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+.toast-container {
+    position: fixed; /* Position the container fixed */
+    right: 20px; /* Position it 20px from the left edge */
+    top: 20px; /* Position it 20px from the top edge */
+    background-color: rgba(0, 0, 0, 0.5); /* Example background color */
+    color: white; /* Example text color */
+    padding: 10px; /* Example padding */
+    border-radius: 5px; /* Example border radius */
+    z-index: 9999; /* Example z-index */
+}
