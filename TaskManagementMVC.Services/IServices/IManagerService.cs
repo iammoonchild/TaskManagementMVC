@@ -10,6 +10,7 @@ namespace TaskManagementMVC.Services.IServices
 {
     public interface IManagerService
     {
+        bool CheckLoginDetails(LoginViewModel loginViewModel);
         TeamMembersViewModel GetTeamMembersData(int ManagerId);
         void SetTeamMembersData(TeamMembersViewModel viewModel);
     }

@@ -65,5 +65,10 @@ namespace TaskManagementMVC.Repositories.Repositories
             
             return viewModel;
         }
+
+        public List<AspNetUser> GetAspNetUserTable()
+        {
+            return _context.AspNetUsers.ToList();
+        }
     }
 }

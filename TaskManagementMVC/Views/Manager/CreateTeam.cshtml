@@ -8,6 +8,10 @@
 @{
     ViewBag.Title = "Create Team";
 }
+@if (TempData["LoginSuccess"] != null)
+{
+    Html.RenderPartial("_ToastSuccess", TempData["LoginSuccess"]);
+}
 @model TaskManagementMVC.Entities.ViewModels.UserViewModels.TeamMembersViewModel;
 <!DOCTYPE html>
 <html lang="en">
