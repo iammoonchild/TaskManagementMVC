@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagementMVC.Entities.Data;
+using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Repositories.IRepositories;
 
 namespace TaskManagementMVC.Repositories.Repositories
@@ -14,6 +15,10 @@ namespace TaskManagementMVC.Repositories.Repositories
         public UserRepo(DbTaskManagementContext context)
         {
             _context = context;
+        }
+        public List<AspNetUser> GetAspNetUserTable()
+        {
+            return _context.AspNetUsers.ToList();
         }
     }
 }

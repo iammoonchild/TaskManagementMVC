@@ -17,30 +17,7 @@ namespace TaskManagementMVC.Controllers
             return View();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Login(LoginViewModel loginViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                bool user = _managerService.CheckLoginDetails(loginViewModel);
-                if (user)
-                {
-                    TempData["LoginSuccess"] = "LoggedIn Successfully";
-                    return RedirectToAction("CreateTeam");
-                }
-                else
-                {
-                    TempData["LoginFailed"] = "Invalid Credentials! Try Again!";
-                    ModelState.AddModelError("", "Invalid Credentials");
-                    return View();
-                }
-            }
-            return View();
-        }
+        
         public IActionResult CreateTeam()
         {
             var ManagerId = 6;
@@ -57,6 +34,10 @@ namespace TaskManagementMVC.Controllers
 
             return View("CreateTeam");
         }
+
+        
+
+
     }
 
 }
