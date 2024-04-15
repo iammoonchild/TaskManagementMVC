@@ -46,12 +46,12 @@ namespace TaskManagementMVC.Authorization
             var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
             if (roleClaim == null)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Patient", action = "Index", }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "User", action = "ErrorPage", }));
                 return;
             }
             if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Patient", action = "Index", }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "User", action = "ErrorPage", }));
                 return;
             }
 

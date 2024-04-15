@@ -80,5 +80,10 @@ namespace TaskManagementMVC.Controllers
             Response.Cookies.Delete("jwt");
             return View("Login");
         }
+
+        public IActionResult ErrorPage()
+        {
+            return View();
+        }   
     }
 }
