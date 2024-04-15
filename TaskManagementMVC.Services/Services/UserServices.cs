@@ -32,5 +32,19 @@ namespace TaskManagementMVC.Services.Services
             var check = user.Where(x => x.Email.Trim().ToLower() == (loginViewModel.Email.Trim().ToLower()) && x.Password == loginViewModel.Password).Select(x => x.RoleId).FirstOrDefault().ToString() ?? "0";
             return check;
         }
+
+        public UserInfoViewModel CheckValidUserWithRole(string email, string password)
+        {
+            List<AspNetUser> user = _userRepo.GetAspNetUserTable();
+            var check = user.Where(x => x.Email.Trim().ToLower() == (email.Trim().ToLower()) && x.Password == password).Select(x => new UserInfoViewModel
+            {
+                UserId = x.Id.ToString(),
+                Name = x.Name,
+                Email = x.Email,
+                RoleId = x.RoleId,
+                Role = x.Role.RoleName
+            }).FirstOrDefault();
+            return check;
+        }
     }
 }

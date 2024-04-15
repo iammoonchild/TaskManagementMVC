@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TaskManagementMVC.Entities.Models;
 
-namespace TaskManagementMVC.Entities.Data;
+namespace TaskManagementMVC.Entities.Models;
 
 public partial class DbTaskManagementContext : DbContext
 {
@@ -20,7 +19,7 @@ public partial class DbTaskManagementContext : DbContext
 
     public virtual DbSet<LogType> LogTypes { get; set; }
 
-    public virtual DbSet<Models.Task> Tasks { get; set; }
+    public virtual DbSet<Task> Tasks { get; set; }
 
     public virtual DbSet<TaskLog> TaskLogs { get; set; }
 
@@ -35,20 +34,32 @@ public partial class DbTaskManagementContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=dpg-codoama0si5c7394gpl0-a.oregon-postgres.render.com;Database=db_task_management;Username=db_task_management_user;Password=qBM7Pvlag7PGfEVmqz5EIWTsjQMCWxDN");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AspNetUser>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("AspNetUsers_pkey");
 
+            entity.Property(e => e.Avatar).HasColumnType("character varying");
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("CURRENT_DATE");
             entity.Property(e => e.Email).HasColumnType("character varying");
             entity.Property(e => e.IsActive).HasDefaultValueSql("true");
             entity.Property(e => e.IsDeleted).HasDefaultValueSql("false");
+            entity.Property(e => e.IsPasswordChanged).HasDefaultValueSql("false");
             entity.Property(e => e.Name).HasColumnType("character varying");
             entity.Property(e => e.OldPassword).HasColumnType("character varying");
             entity.Property(e => e.Password).HasColumnType("character varying");
             entity.Property(e => e.PhoneNo).HasColumnType("character varying");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetUsers)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("AspNetUsers_RoleId_fkey");
+
+            entity.HasOne(d => d.Team).WithMany(p => p.AspNetUsers)
+                .HasForeignKey(d => d.TeamId)
+                .HasConstraintName("AspNetUsers_TeamId_fkey");
         });
 
         modelBuilder.Entity<LogType>(entity =>
@@ -58,7 +69,7 @@ public partial class DbTaskManagementContext : DbContext
             entity.Property(e => e.LogTypeName).HasColumnType("character varying");
         });
 
-        modelBuilder.Entity<Models.Task>(entity =>
+        modelBuilder.Entity<Task>(entity =>
         {
             entity.HasKey(e => e.TaskId).HasName("Tasks_pkey");
 

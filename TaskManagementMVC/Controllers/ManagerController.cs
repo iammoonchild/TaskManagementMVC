@@ -2,8 +2,10 @@
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
+using TaskManagementMVC.Authorization;
 namespace TaskManagementMVC.Controllers
 {
+
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
@@ -17,7 +19,7 @@ namespace TaskManagementMVC.Controllers
             return View();
         }
 
-        
+        [CustomAuthorize("Manager")]
         public IActionResult CreateTeam()
         {
             var ManagerId = 6;

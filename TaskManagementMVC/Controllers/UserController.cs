@@ -8,9 +8,11 @@ namespace TaskManagementMVC.Controllers
     public class UserController : Controller
     {
         private readonly IUserServices _userServices;
-        public UserController(IUserServices userServices)
+        public readonly IJWTService _JWTService;
+        public UserController(IUserServices userServices, IJWTService JWTService)
         {
             _userServices = userServices;
+            _JWTService = JWTService;
         }
 
 
@@ -24,13 +26,16 @@ namespace TaskManagementMVC.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel loginViewModel)
+        public IActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                string RoleId = _userServices.CheckLoginDetails(loginViewModel);
+                string RoleId = _userServices.CheckLoginDetails(model);
                 if (RoleId != "0")
                 {
+                    UserInfoViewModel validUser = _userServices.CheckValidUserWithRole(model.Email, model.Password);
+                    var JWTToken = _JWTService.GenerateJWTToken(validUser);
+                    Response.Cookies.Append("jwt", JWTToken);
                     TempData["LoginSuccess"] = "LoggedIn Successfully";
                     return RedirectToAction("CreateTeam","Manager");
                 }
@@ -68,6 +73,12 @@ namespace TaskManagementMVC.Controllers
             }
             TempData["ResetPasswordFailed"] = "Invalid Email! Try Again!";
             return View();
+        }
+
+        public IActionResult LogOut()
+        {
+            Response.Cookies.Delete("jwt");
+            return View("Login");
         }
     }
 }
