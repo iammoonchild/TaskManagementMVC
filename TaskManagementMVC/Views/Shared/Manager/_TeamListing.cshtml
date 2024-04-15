@@ -1,0 +1,50 @@
+﻿@using TaskManagementMVC.Entities.ViewModels.Manager
+@model IEnumerable<TeamListingViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Team Listing";
+}
+
+<link rel="stylesheet" href="~/css/TeamCard.css" />
+<div class="container">
+    <div class="team-listing-wrapper row">
+        @foreach (var team in Model)
+    {
+        <div class="item col-md-6 col-sm-12 col-lg-4 my-4">
+            <div class="card card-to-hover thumbnail shadow card-to-scale">
+                <div class="card card-hover-overlay">
+                    <div class="card-img-overlay card-hover-overlay">
+                        <div class="d-flex flex-column hidden-info">
+                            <div class="location-field text-dark bg-light px-2 py-1 rounded-pill text-center hidden-info">
+                                    <i class="bi bi-person-bounding-box texr-decoration-none fst-normal"></i>&nbsp; &nbsp; Team Leader &nbsp; @team.TeamName.Split(" ")[0]
+                            </div>
+                            <div class="bg-light p-1 my-1 rounded-pill d-flex justify-content-center align-items-center hidden-info">
+                                <i class="bi bi-people-fill text-decoration-none fst-normal text-dark">&nbsp; &nbsp; Team Size &nbsp; @team.TeamSize</i>
+                            </div>
+                            <div class="bg-light p-1 my-1 text-center rounded-pill border-0 recommendation-grid-list hidden-info">
+                                <i class="bi bi-clock text-decoration-none fst-normal text-dark">&nbsp; &nbsp; Created On &nbsp; @team.CreatedOn</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-body-h-450px d-flex flex-column justify-content-between">
+                    <h5 class="card-title">
+                        @team.TeamName
+                    </h5>
+                    <p class="card-text card-text-h-150px">
+                        Team Size: @team.TeamSize<br>
+                        Created On: @team.CreatedOn
+                    </p>       
+                    <hr class="" style="margin-top: -10px;">
+                    <div class="mission-submit-btn text-center">
+                        <button class="btn bg-white  rounded-pill px-4" onclick="teamDetails(@team.TeamId)">
+                            View Details
+                            &nbsp; &nbsp;<i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+</div>

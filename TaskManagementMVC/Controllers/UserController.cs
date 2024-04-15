@@ -32,7 +32,7 @@ namespace TaskManagementMVC.Controllers
                 if (RoleId != "0")
                 {
                     TempData["LoginSuccess"] = "LoggedIn Successfully";
-                    return RedirectToAction("CreateTeam","Manager");
+                    return RedirectToAction("ManagerDashboard", "Manager");
                 }
                 else
                 {

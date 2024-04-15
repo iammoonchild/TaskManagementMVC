@@ -35,6 +35,10 @@ public partial class AspNetUser
 
     public string? Avatar { get; set; }
 
+    public bool? IsPasswordChanged { get; set; }
+
+    public virtual UserRole Role { get; set; } = null!;
+
     public virtual ICollection<Task> TaskAssignedBies { get; set; } = new List<Task>();
 
     public virtual ICollection<Task> TaskAssignedTos { get; set; } = new List<Task>();
@@ -50,6 +54,8 @@ public partial class AspNetUser
     public virtual ICollection<TaskLog> TaskLogTransferredTos { get; set; } = new List<TaskLog>();
 
     public virtual ICollection<Task> TaskModifiedByNavigations { get; set; } = new List<Task>();
+
+    public virtual Team? Team { get; set; }
 
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 }

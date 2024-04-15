@@ -2,6 +2,8 @@
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
+using TaskManagementMVC.Entities.ViewModels.Manager;
+
 namespace TaskManagementMVC.Controllers
 {
     public class ManagerController : Controller
@@ -22,6 +24,13 @@ namespace TaskManagementMVC.Controllers
         {
             var ManagerId = 6;
             TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
+            return View(model);
+        }
+
+        public IActionResult ManagerDashboard()
+        {
+            int managerId = 6;
+            IEnumerable<TeamListingViewModel> model = _managerService.GetTeamListing(managerId);
             return View(model);
         }
 

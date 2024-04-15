@@ -1,32 +1,35 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
 .toast-container {
     position: fixed; /* Position the container fixed */
     right: 20px; /* Position it 20px from the left edge */
     top: 20px; /* Position it 20px from the top edge */
-    background-color: rgba(0, 0, 0, 0.5); /* Example background color */
+    background-color: none; /* Example background color */
     color: white; /* Example text color */
     padding: 10px; /* Example padding */
     border-radius: 5px; /* Example border radius */
     z-index: 9999; /* Example z-index */
+    opacity: 0.75;
+    animation: slideIn 0.5s, slideOut 0.5s 2.5s;
 }
