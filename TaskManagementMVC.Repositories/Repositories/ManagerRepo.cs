@@ -21,6 +21,13 @@ namespace TaskManagementMVC.Repositories.Repositories
 
         public void SetTeamMembersData(TeamMembersViewModel viewModel)
         {
+            //here first register the team
+            var team = new Team
+            {
+                Pmid = 6,
+                //current date as date only in CreatedDate
+                //CreatedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+        };
             foreach (var item in viewModel.FirstName)
             {
                 _context.AspNetUsers.Add(new AspNetUser

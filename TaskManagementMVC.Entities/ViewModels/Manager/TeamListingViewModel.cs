@@ -12,4 +12,8 @@ public class TeamListingViewModel
     public string TeamName { get; set; } // this will be TeamLeader (who is having role 2 in team)'s name
     public int TeamSize { get; set; }
     public DateOnly CreatedOn { get; set; }
+
+    public int PendingTasks { get; set; }
+    public int InprogressTasks { get; set; }
+    public int CompletedTasks { get; set; }
 }

@@ -4,49 +4,45 @@
     ViewBag.Title = "Create Team";
 }
 
-<div class="container-fluid" style="height:100vh">
-    @if (Model.GetTeamMembersData.Count != 0)
-    {
-        <div class="d-flex justify-content-center align-items-center">
-            @foreach (var items in Model.GetTeamMembersData)
-            {
-                <div class="mx-1" style="width:150px">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <img src="/images/memberavatar.png"
-                             style="height:100px; width:100px" class="mx-auto" />
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="fs-5 text-wrap mx-4">@items.Name</span>
+<div class="container-fluid mt-2" style="height:100vh">
+
+    <div class="login-container">
+        <div class="wrapper row justify-content-between">
+            <div class="left col-lg-5 d-none d-md-block border-end pe-4">
+                <div class="company-logo">
+                    <img src="/images/logo-ptm.png" alt="Company Logo">
+                    <h5 class="mb-3">Welcome, User</h5>
+                    <div class="mt-1">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <p>You don't have any team yet, kindly create one team with the following guidelines:</p>
+                                <ul>
+                                    <li>At least one Team Leader is required in the project.</li>
+                                    <li>Team name will be generated automatically like "Team - Team Leader's Name".</li>
+                                    <li>For example: If the team leader's name is John Doe, the team name should be "Team - John Doe".</li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            }
-
-        </div>
-        <div class="d-flex text-center flex-column mt-5 mx-auto">
-            <div class="h3 m-auto">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Create Team
-                </button>
-
             </div>
-
-        </div>
-
-    }
-    else
-    {
-        <div class="d-flex text-center flex-column h-100 m-auto">
-            <div class="h3 m-auto">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Create Team
-                </button>
-
+            <div class="right col-lg-6 my-auto ms-1">
+                <div class="login-title h-100">
+                    <h3>Initiate your team-building journey by forming your first team now!</h3>
+                    <div class="mt-4 d-flex text-center flex-column h-100">
+                        <div class="h3 m-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="bi bi-plus-circle-fill"></i>
+                                Create Team
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
-    }
+    </div>
+
+
 </div>
 <!-- Button trigger modal -->
 <!-- Modal -->
@@ -59,10 +55,6 @@
             </div>
             <div class="modal-body">
                 <form id="teamMembersForm" class="" method="post">
-                    <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" name="TeamName" placeholder="" required>
-                        <label for="TeamName">Team Name</label>
-                    </div>
                     <div id="teamMembersContainer">
                         <div class="team-member-wrapper">
                             <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
@@ -91,7 +83,6 @@
                                     <option value="">Select Role</option>
                                     <option value="1">Team Lead</option>
                                     <option value="2">Member</option>
-                                    <!-- Add more roles as needed -->
                                 </select>
                                 <label for="Role[]">Role</label>
 

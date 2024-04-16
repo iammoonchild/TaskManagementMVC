@@ -34,6 +34,12 @@ namespace TaskManagementMVC.Controllers
             return View(model);
         }
 
+        public PartialViewResult GetTeamListing(int managerId)
+        {
+            var model = _managerService.GetTeamListing(managerId);
+            return PartialView("_TeamListing", model);
+        }
+
         [HttpPost]
         public IActionResult SetTeamMembersData(TeamMembersViewModel viewModel)
         {
@@ -41,7 +47,7 @@ namespace TaskManagementMVC.Controllers
             var check = viewModel.FirstName.First();
             _managerService.SetTeamMembersData(viewModel);
 
-            return View("CreateTeam");
+            return RedirectToAction("GetTeamListing",new {managerId = 6});
         }
 
         
