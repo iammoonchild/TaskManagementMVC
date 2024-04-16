@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaskManagementMVC.Entities.Data;
 using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.IRepositories;
@@ -70,7 +69,7 @@ namespace TaskManagementMVC.Repositories.Repositories
 
             var viewModel = new TeamMembersViewModel();
             viewModel.GetTeamMembersData = data.ToList();
-            
+            viewModel.UserName = _context.AspNetUsers.Where(x => x.Id == managerId).Select(x => x.Name).FirstOrDefault();
             return viewModel;
         }
 

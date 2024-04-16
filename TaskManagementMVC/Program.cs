@@ -1,4 +1,5 @@
-using TaskManagementMVC.Entities.Data;
+
+using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Repositories.Repositories;
 using TaskManagementMVC.Services.IServices;
@@ -15,7 +16,7 @@ builder.Services.AddScoped<IManagerRepo, ManagerRepo>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
-
+builder.Services.AddScoped<IJWTService, JWTService>();
 
 var app = builder.Build();
 

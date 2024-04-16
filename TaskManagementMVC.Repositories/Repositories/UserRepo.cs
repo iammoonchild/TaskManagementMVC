@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaskManagementMVC.Entities.Data;
 using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Repositories.IRepositories;
 
@@ -18,7 +18,7 @@ namespace TaskManagementMVC.Repositories.Repositories
         }
         public List<AspNetUser> GetAspNetUserTable()
         {
-            return _context.AspNetUsers.ToList();
+            return _context.AspNetUsers.Include(x => x.Role).ToList();
         }
     }
 }

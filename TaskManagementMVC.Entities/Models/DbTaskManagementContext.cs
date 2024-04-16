@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TaskManagementMVC.Entities.Models;
 
-namespace TaskManagementMVC.Entities.Data;
+namespace TaskManagementMVC.Entities.Models;
 
 public partial class DbTaskManagementContext : DbContext
 {
@@ -20,7 +19,7 @@ public partial class DbTaskManagementContext : DbContext
 
     public virtual DbSet<LogType> LogTypes { get; set; }
 
-    public virtual DbSet<Models.Task> Tasks { get; set; }
+    public virtual DbSet<Task> Tasks { get; set; }
 
     public virtual DbSet<TaskLog> TaskLogs { get; set; }
 
@@ -70,7 +69,7 @@ public partial class DbTaskManagementContext : DbContext
             entity.Property(e => e.LogTypeName).HasColumnType("character varying");
         });
 
-        modelBuilder.Entity<Models.Task>(entity =>
+        modelBuilder.Entity<Task>(entity =>
         {
             entity.HasKey(e => e.TaskId).HasName("Tasks_pkey");
 

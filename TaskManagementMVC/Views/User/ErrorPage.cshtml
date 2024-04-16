@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #e74c3c; /* Red color for emphasis */
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #555; /* Dark gray for readability */
+        }
+
+        .btn-back {
+            background-color: #007bff; /* Blue color for contrast */
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-back:hover {
+                background-color: #0056b3; /* Darker blue on hover */
+            }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Access Denied</h1>
+        <p>Oops! It seems you do not have permission to access this page.</p>
+        <a onclick="window.history.back();" class="btn-back">Go Back</a>
+    </div>
+</body>
+</html>
+
+
+

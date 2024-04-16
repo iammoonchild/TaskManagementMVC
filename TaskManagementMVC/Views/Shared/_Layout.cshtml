@@ -40,11 +40,12 @@
                         <div class="d-lg-inline-block d-none ms-3">
                             <a class="nav-link d-lg-flex flex-column align-items-center" href="#">
                                 <img src="~/images/memberavatar.png" alt="Profile" width="40" class="rounded-circle">
-                                <span>User Name</span>
+                                <span>@ViewBag.UserName </span>
                             </a>
                         </div>
                         <div class="d-lg-inline-block d-none ms-3">
-                            <a class="nav-link d-lg-flex flex-column align-items-center" href="#">
+                            <a class="nav-link d-lg-flex flex-column align-items-center"
+                            asp-action="Logout" asp-controller="User">
                                 <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
                                 <span>Logout</span>
                             </a>

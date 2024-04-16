@@ -11,5 +11,6 @@ namespace TaskManagementMVC.Services.IServices
     {
         bool CheckEmailDetails(string email);
         string CheckLoginDetails(LoginViewModel loginViewModel);
+        UserInfoViewModel CheckValidUserWithRole(string email, string password);
     }
 }
