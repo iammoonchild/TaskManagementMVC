@@ -21,12 +21,13 @@ namespace TaskManagementMVC.Repositories.Repositories
         public void SetTeamMembersData(TeamMembersViewModel viewModel)
         {
             //here first register the team
-            var team = new Team
+            Team team = new Team
             {
                 Pmid = 6,
-                //current date as date only in CreatedDate
-                //CreatedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
-        };
+                CreatedDate = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+            };
+            _context.Add(team);
+            _context.SaveChanges();
             foreach (var item in viewModel.FirstName)
             {
                 _context.AspNetUsers.Add(new AspNetUser
@@ -35,8 +36,8 @@ namespace TaskManagementMVC.Repositories.Repositories
                     Email = viewModel.Email[viewModel.FirstName.IndexOf(item)],
                     RoleId = short.Parse(viewModel.Role[viewModel.FirstName.IndexOf(item)]),
                     Password = GenerateRandomPassword(8),
-                    OldPassword = GenerateRandomPassword(8)
-
+                    OldPassword = GenerateRandomPassword(8),
+                    TeamId = team.TeamId,
                 });
             }
             _context.SaveChanges();

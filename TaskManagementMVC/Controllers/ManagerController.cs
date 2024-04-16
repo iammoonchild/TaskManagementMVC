@@ -39,7 +39,7 @@ namespace TaskManagementMVC.Controllers
         public PartialViewResult GetTeamListing(int managerId)
         {
             var model = _managerService.GetTeamListing(managerId);
-            return PartialView("_TeamListing", model);
+            return PartialView("~/Views/Shared/Manager/_TeamListing.cshtml", model);
         }
 
         [HttpPost]
