@@ -3,6 +3,8 @@ using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Authorization;
+using TaskManagementMVC.Entities.ViewModels.Manager;
+
 namespace TaskManagementMVC.Controllers
 {
 
@@ -27,6 +29,19 @@ namespace TaskManagementMVC.Controllers
             return View(model);
         }
 
+        public IActionResult ManagerDashboard()
+        {
+            int managerId = 6;
+            IEnumerable<TeamListingViewModel> model = _managerService.GetTeamListing(managerId);
+            return View(model);
+        }
+
+        public PartialViewResult GetTeamListing(int managerId)
+        {
+            var model = _managerService.GetTeamListing(managerId);
+            return PartialView("_TeamListing", model);
+        }
+
         [HttpPost]
         public IActionResult SetTeamMembersData(TeamMembersViewModel viewModel)
         {
@@ -34,7 +49,7 @@ namespace TaskManagementMVC.Controllers
             var check = viewModel.FirstName.First();
             _managerService.SetTeamMembersData(viewModel);
 
-            return View("CreateTeam");
+            return RedirectToAction("GetTeamListing",new {managerId = 6});
         }
 
         

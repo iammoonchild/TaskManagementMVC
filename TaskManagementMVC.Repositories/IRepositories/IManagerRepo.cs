@@ -12,6 +12,7 @@ namespace TaskManagementMVC.Repositories.IRepositories
     {
         List<AspNetUser> GetAspNetUserTable();
         TeamMembersViewModel GetTeamMembersData(int managerId);
+        IQueryable<Team> GetTeams(int managerId);
         void SetTeamMembersData(TeamMembersViewModel viewModel);
     }
 }

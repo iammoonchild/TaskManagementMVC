@@ -1,0 +1,105 @@
+﻿@model TaskManagementMVC.Entities.ViewModels.UserViewModels.TeamMembersViewModel;
+@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Create Team";
+}
+
+<div class="container-fluid mt-2" style="height:100vh">
+
+    <div class="login-container">
+        <div class="wrapper row justify-content-between">
+            <div class="left col-lg-5 d-none d-md-block border-end pe-4">
+                <div class="company-logo">
+                    <img src="/images/logo-ptm.png" alt="Company Logo">
+                    <h5 class="mb-3">Welcome, User</h5>
+                    <div class="mt-1">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <p>You don't have any team yet, kindly create one team with the following guidelines:</p>
+                                <ul>
+                                    <li>At least one Team Leader is required in the project.</li>
+                                    <li>Team name will be generated automatically like "Team - Team Leader's Name".</li>
+                                    <li>For example: If the team leader's name is John Doe, the team name should be "Team - John Doe".</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="right col-lg-6 my-auto ms-1">
+                <div class="login-title h-100">
+                    <h3>Initiate your team-building journey by forming your first team now!</h3>
+                    <div class="mt-4 d-flex text-center flex-column h-100">
+                        <div class="h3 m-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="bi bi-plus-circle-fill"></i>
+                                Create Team
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="teamMembersForm" class="" method="post">
+                    <div id="teamMembersContainer">
+                        <div class="team-member-wrapper">
+                            <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
+                                <h5>Team Member</h5>
+                                <button type="button" class="btn btn-danger delete-member">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
+                                <label for="FirstName[]">First Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="LastName[]" placeholder="" required>
+                                <label for="LastName[]">Last Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="email" class="form-control" name="Email[]" placeholder="" required>
+                                <label for="Email[]">Email ID</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <select class="form-select" name="Role[]" required>
+                                    <option value="">Select Role</option>
+                                    <option value="1">Team Lead</option>
+                                    <option value="2">Member</option>
+                                </select>
+                                <label for="Role[]">Role</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-primary" id="addMore">Add More</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="saveTeamMembers">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/CreateTeamScript.js"></script>

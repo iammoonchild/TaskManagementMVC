@@ -33,7 +33,7 @@ public partial class DbTaskManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=dpg-codoama0si5c7394gpl0-a.oregon-postgres.render.com;Database=db_task_management;Username=db_task_management_user;Password=qBM7Pvlag7PGfEVmqz5EIWTsjQMCWxDN");
+        => optionsBuilder.UseNpgsql("Host=dpg-codoama0si5c7394gpl0-a.oregon-postgres.render.com\n;Database=db_task_management;Username=db_task_management_user;Password=qBM7Pvlag7PGfEVmqz5EIWTsjQMCWxDN");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

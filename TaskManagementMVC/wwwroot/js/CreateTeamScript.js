@@ -54,6 +54,7 @@ document.getElementById('addMore').addEventListener('click', function () {
 document.getElementById('saveTeamMembers').addEventListener('click', function () {
     var form = document.getElementById('teamMembersForm');
     var formData = new FormData(form);
+    
 
     $.ajax({
         url: '/Manager/SetTeamMembersData',
@@ -63,8 +64,13 @@ document.getElementById('saveTeamMembers').addEventListener('click', function ()
         contentType: false, // Prevent jQuery from setting contentType
         success: function (response) {
             alert('Team members saved successfully!');
+            $("#main-manager-dashboard").html(response);
+            //close the modal
+            var modal = bootstrap.Modal.getInstance(document.getElementById('addTeamMembersModal'));
+            modal.hide();
         },
         error: function (error) {
+            console.log(error);
             // Handle error
         }
     });

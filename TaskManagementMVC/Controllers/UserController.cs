@@ -37,7 +37,7 @@ namespace TaskManagementMVC.Controllers
                     var JWTToken = _JWTService.GenerateJWTToken(validUser);
                     Response.Cookies.Append("jwt", JWTToken);
                     TempData["LoginSuccess"] = "LoggedIn Successfully";
-                    return RedirectToAction("CreateTeam","Manager");
+                    return RedirectToAction("ManagerDashboard", "Manager");
                 }
                 else
                 {
