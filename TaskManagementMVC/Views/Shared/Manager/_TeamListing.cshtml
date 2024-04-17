@@ -10,7 +10,7 @@
     <div class="team-listing-wrapper row">
         @foreach (var team in Model)
     {
-        <div class="item col-md-6 col-sm-12 col-lg-4 my-4">
+        <div class="item col-md-6 col-sm-12 col-lg-4 my-4" onclick="gotoTeamWorkDetails(@team.TeamId)">
             <div class="card card-to-hover thumbnail shadow card-to-scale">
                 <div class="card card-hover-overlay">
                     <div class="card-img-overlay card-hover-overlay">
@@ -48,3 +48,8 @@
     }
     </div>
 </div>
+<script>
+    function gotoTeamWorkDetails(teamId) {
+        window.location.href = "/Manager/TeamWorkDetails?teamId=" + teamId;
+    }
+</script>

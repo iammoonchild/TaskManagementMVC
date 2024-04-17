@@ -11,6 +11,7 @@ using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.Enums;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
+using static TaskManagementMVC.Repositories.Enums.TaskStates;
 
 namespace TaskManagementMVC.Services.Services
 {
@@ -43,6 +44,27 @@ namespace TaskManagementMVC.Services.Services
         public TeamMembersViewModel GetTeamMembersData(int ManagerId)
         {
             return _managerRepo.GetTeamMembersData(ManagerId);
+        }
+
+        public TeamWorkDetailsViewModel GetTeamWorkDetails(int teamId)
+        {
+            IQueryable<AspNetUser> model = _managerRepo.GetTeamWorkDetails(teamId);
+            var temp = model.Select(x => new TeamMemberDetails
+            {
+                MemberId = x.Id,
+                MemberName = x.Name,
+                IsMemberActive = x.IsActive ?? false,
+                NoOfTaskAssigned = x.TaskAssignedTos.Count,
+                NoOfTaskPending = x.TaskAssignedTos.Where(y => y.AssignedToId==x.Id && y.TaskStateId == (int)TaskStateEnum.Pending).Count(),
+                NoOfTaskInProgress = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.TaskStateId == (int)TaskStateEnum.InProgress).Count(),
+                NoOfTaskCompletedOnBeforeDeadline = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.IsCompleted==true).Count(),
+                NoOfTaskCompletedAfterDeadline = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.IsCompleted == true).Count(),
+            }).ToList();
+            return new TeamWorkDetailsViewModel
+            {
+                TeamId = teamId,
+                TeamMemberDetails = temp
+            };
         }
 
         public void SetTeamMembersData(TeamMembersViewModel viewModel)

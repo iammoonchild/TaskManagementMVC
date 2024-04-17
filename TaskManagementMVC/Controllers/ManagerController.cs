@@ -52,6 +52,11 @@ namespace TaskManagementMVC.Controllers
             return RedirectToAction("GetTeamListing",new {managerId = 6});
         }
 
+        public IActionResult TeamWorkDetails([FromQuery] int teamId)
+        {
+            TeamWorkDetailsViewModel model = _managerService.GetTeamWorkDetails(teamId);
+            return View(model);
+        }
         
 
 

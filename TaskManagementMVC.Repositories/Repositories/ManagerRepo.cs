@@ -81,11 +81,12 @@ namespace TaskManagementMVC.Repositories.Repositories
 
         public IQueryable<Team> GetTeams(int managerId)
         {
-            //want to get team of manager by managerId
-            // awant to get team members of that team
-            // want to get team leader of that team
-            // want to get team size of that team
             return _context.Teams.Include(x => x.AspNetUsers).Where(x => x.Pmid == managerId);
+        }
+
+        public IQueryable<AspNetUser> GetTeamWorkDetails(int teamId)
+        {
+            return _context.AspNetUsers.Include(x => x.TaskAssignedTos).Where(x => x.TeamId == teamId);
         }
     }
 }
