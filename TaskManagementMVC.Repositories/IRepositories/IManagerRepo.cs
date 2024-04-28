@@ -10,9 +10,9 @@ namespace TaskManagementMVC.Repositories.IRepositories
 {
     public interface IManagerRepo
     {
-        List<AspNetUser> GetAspNetUserTable();
         TeamMembersViewModel GetTeamMembersData(int managerId);
         IQueryable<Team> GetTeams(int managerId);
-        void SetTeamMembersData(TeamMembersViewModel viewModel);
+        IQueryable<AspNetUser> GetTeamWorkDetails(int teamId);
+        void SetTeamMembersData(TeamMembersViewModel viewModel,long PMId);
     }
 }

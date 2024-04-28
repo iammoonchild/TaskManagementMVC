@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
+using TaskManagementMVC.Repositories.Enums;
 using TaskManagementMVC.Services.IServices;
 using TaskManagementMVC.Services.Services;
 
@@ -9,10 +13,12 @@ namespace TaskManagementMVC.Controllers
     {
         private readonly IUserServices _userServices;
         public readonly IJWTService _JWTService;
-        public UserController(IUserServices userServices, IJWTService JWTService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserController(IUserServices userServices, IJWTService JWTService, IHttpContextAccessor httpContextAccessor)
         {
             _userServices = userServices;
             _JWTService = JWTService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -30,21 +36,30 @@ namespace TaskManagementMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                string RoleId = _userServices.CheckLoginDetails(model);
-                if (RoleId != "0")
-                {
-                    UserInfoViewModel validUser = _userServices.CheckValidUserWithRole(model.Email, model.Password);
-                    var JWTToken = _JWTService.GenerateJWTToken(validUser);
-                    Response.Cookies.Append("jwt", JWTToken);
-                    TempData["LoginSuccess"] = "LoggedIn Successfully";
-                    return RedirectToAction("ManagerDashboard", "Manager");
-                }
-                else
+                UserInfoViewModel user = _userServices.CheckUserWithCredentials(model);
+                if (user == null)
                 {
                     TempData["LoginFailed"] = "Invalid Credentials! Try Again!";
                     ModelState.AddModelError("", "Invalid Credentials");
                     return View();
                 }
+                var JWTToken = _JWTService.GenerateJWTToken(user);
+                Response.Cookies.Append("jwt", JWTToken);
+                _httpContextAccessor.HttpContext.Session.SetString("userId", user.UserId.ToString());
+                _httpContextAccessor.HttpContext.Session.SetString("Email", user.Email);
+                TempData["LoginSuccess"] = "LoggedIn Successfully";
+                ViewBag.UserName = user.Name;
+                if (!user.IsPasswordChanged)
+                {
+                    return RedirectToAction("ResetPasswordByUser");
+                }
+
+                if (user.RoleId == (int)RoleEnum.Role.PM)
+                    return RedirectToAction("Dashboard", "Manager");
+                else if (user.RoleId == (int)RoleEnum.Role.TeamLeader)
+                    return RedirectToAction("Kanban", "TeamLead");
+                else if (user.RoleId == (int)RoleEnum.Role.SE)
+                    return RedirectToAction("Dashboard", "Member");
             }
             return View();
         }
@@ -59,17 +74,17 @@ namespace TaskManagementMVC.Controllers
         {
             if (Email != null)
             {
-                bool user = _userServices.CheckEmailDetails(Email);
-                if (user)
-                {
-                    TempData["ResetPassword"] = "Password Reset Successfully";
-                    return RedirectToAction("Login");
-                }
-                else
-                {
-                    TempData["ResetPasswordFailed"] = "Invalid Email! Try Again!";
-                    return View();
-                }
+                
+                //if (user)
+                //{
+                //    TempData["ResetPassword"] = "Password Reset Successfully";
+                //    return RedirectToAction("Login");
+                //}
+                //else
+                //{
+                //    TempData["ResetPasswordFailed"] = "Invalid Email! Try Again!";
+                //    return View();
+                //}
             }
             TempData["ResetPasswordFailed"] = "Invalid Email! Try Again!";
             return View();
@@ -78,12 +93,29 @@ namespace TaskManagementMVC.Controllers
         public IActionResult LogOut()
         {
             Response.Cookies.Delete("jwt");
+            _httpContextAccessor.HttpContext.Session.Clear();
             return View("Login");
         }
 
         public IActionResult ErrorPage()
         {
             return View();
-        }   
+        }
+
+        public IActionResult ResetPasswordByUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ResetUserPassword(PasswordViewModel pwdModel)
+        {
+            ResetPWDViewModel model = new ResetPWDViewModel();
+            model.Passwords = pwdModel;
+            model.Passwords.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(pwdModel.Password, HashType.SHA512);
+            model.Email = _httpContextAccessor.HttpContext.Session.GetString("Email");
+            _userServices.ResetPassword(model);
+            return View();
+        }
     }
 }

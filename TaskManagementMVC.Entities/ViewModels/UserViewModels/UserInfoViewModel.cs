@@ -13,5 +13,6 @@ namespace TaskManagementMVC.Entities.ViewModels.UserViewModels
         public string Role { get; set; }
         public string Email { get; set; }
         public int RoleId { get; set; }
+        public bool IsPasswordChanged { get; set; }
     }
 }

@@ -1,0 +1,393 @@
+﻿@using TaskManagementMVC.Entities.ViewModels.Manager
+@model TeamWorkDetailsViewModel
+@{
+    ViewData["Title"] = "PTM | Team";
+    ViewBag.Title = "PTM | Team";
+    ViewBag.ActivePage = "TeamWorkDetails";
+    ViewBag.UserName = "Username Here";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5 class="card-title">Team Members</h5>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Add Team Members
+                    </button>
+                </div>
+                <div class="card-body mx-0 px-0 pb-0 mb-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Team Member Id</th>
+                                    <th>Member Name</th>
+                                    <th>No. of Tasks Assigned</th>
+                                    <th>Tasks Pending</th>
+                                    <th>Task In Progress</th>
+                                    <th>Tasks Completed</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.TeamMemberDetails)
+                                {
+                                    <tr>
+                                        <td>@member.MemberId</td>
+                                        <td>@member.MemberName</td>
+                                        <td>@member.NoOfTaskAssigned</td>
+                                        <td>@member.NoOfTaskPending</td>
+                                        <td>@member.NoOfTaskInProgress</td>
+                                        <td>
+                                            @{
+                                                var totalTaskCompleted = member.NoOfTaskCompletedOnBeforeDeadline + member.NoOfTaskCompletedAfterDeadline;
+                                            }
+                                            @totalTaskCompleted
+                                        </td>
+                                        <td class="d-flex g-2">
+                                            <button type="button" class="btn btn-outline-success me-2" onclick="editUser(@member.MemberId,@member.Role,@member.IsMemberActive.ToString().ToLower())">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary" onclick="showChart(@member.NoOfTaskAssigned,@member.NoOfTaskPending,@member.NoOfTaskInProgress,@member.NoOfTaskCompletedOnBeforeDeadline,@member.NoOfTaskCompletedAfterDeadline)">
+                                                <i class="bi bi-bar-chart"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for adding team members -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Team Members</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="teamMembersForm" class="">
+                    <div id="teamMembersContainer">
+                        <div class="team-member-wrapper">
+                            <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
+                                <h5>Team Member</h5>
+                                <button type="button" class="btn btn-danger delete-member">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
+                                <label for="FirstName[]">First Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="LastName[]" placeholder="" required>
+                                <label for="LastName[]">Last Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="email" class="form-control" name="Email[]" placeholder="" required>
+                                <label for="Email[]">Email ID</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <select class="form-select" name="Role[]" required>
+                                    <option value="">Select Role</option>
+                                    <option value="Role 1">Role 1</option>
+                                    <option value="Role 2">Role 2</option>
+                                    <!-- Add more roles as needed -->
+                                </select>
+                                <label for="Role[]">Role</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-primary" id="addMore">Add More</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveTeamMembers">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS bundle (required) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+
+<!-- JS for handling the Add new team members -->
+<script>
+    document.getElementById('teamMembersContainer').addEventListener('click', function (event) {
+        // Check if the clicked element is a delete button
+        if (event.target.classList.contains('delete-member')) {
+            // Remove the closest wrapper div
+            var memberWrappers = document.querySelectorAll('.team-member-wrapper');
+            if (memberWrappers.length > 1) {
+                event.target.closest('.team-member-wrapper').remove();
+            }
+        }
+    });
+    //refresh window if modal is closed through close button or cross button
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        location.reload();
+    });
+    // Add more fields when clicking on "Add More" button
+    document.getElementById('addMore').addEventListener('click', function () {
+        var container = document.getElementById('teamMembersContainer');
+        var template = document.createElement('div');
+        template.innerHTML = `
+            <div class="team-member-wrapper">
+                <hr>
+                                <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
+                                    <h5>Team Member</h5>
+                                    <button type="button" class="btn btn-danger delete-member"><i class="bi bi-trash"></i></button>
+                                </div>
+            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
+                                <label for="FirstName[]">First Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="LastName[]" placeholder="" required>
+                                <label for="LastName[]">Last Name</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="email" class="form-control" name="Email[]" placeholder="" required>
+                                <label for="Email[]">Email ID</label>
+
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <select class="form-select" name="Role[]" required>
+                                    <option value="">Select Role</option>
+                                    <option value="Role 1">Role 1</option>
+                                    <option value="Role 2">Role 2</option>
+                                    <!-- Add more roles as needed -->
+                                </select>
+                                <label for="Role[]">Role</label>
+
+                            </div>
+                            </div>
+            `;
+        container.appendChild(template);
+    });
+
+    // Save team members
+    document.getElementById('saveTeamMembers').addEventListener('click', function () {
+        var form = document.getElementById('teamMembersForm');
+        var formData = new FormData(form);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        var firstName = formData.getAll('FirstName[]');
+        var lastName = formData.getAll('LastName[]');
+        var email = formData.getAll('Email[]');
+        var role = formData.getAll('Role[]');
+
+        console.log('First Name:', firstName);
+        console.log('Last Name:', lastName);
+        console.log('Email:', email);
+        console.log('Role:', role);
+        // Send formData to server via AJAX or submit the form
+        // Example:
+        // fetch('/url/to/save/team/members', {
+        //     method: 'POST',
+        //     body: formData
+        // }).then(response => {
+        //     // Handle response
+        // });
+        // Alternatively, you can submit the form if you are not using AJAX
+        // form.submit();
+    });
+</script>
+
+<!-- Modal for displaying chart -->
+<div class="modal fade" id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chartModalLabel">USER NAME</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <canvas id="tasksChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Editing User -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for editing user details -->
+                <form id="editUserForm">
+                    <div class="mb-3">
+                        <label for="editRole" class="form-label">Role</label>
+                        <select class="form-select" id="editRole" required>
+                            <option value="">Select Role</option>
+                            <option value="2">Team Lead</option>
+                            <option value="3">SE</option>
+                            <!-- Add more roles as needed -->
+                        </select>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="editStatus">
+                        <label class="form-check-label" for="editStatus">Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveEdit">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JS for Editing User -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get references to the form elements and the save button
+        const roleSelect = document.getElementById('editRole');
+        const isActiveCheckbox = document.getElementById('editStatus');
+        const saveButton = document.getElementById('saveEdit');
+
+        // Initialize variables to store the initial values
+        let initialRoleValue = roleSelect.value;
+        let initialIsActiveValue = isActiveCheckbox.checked;
+
+        // Disable the save button initially
+        saveButton.disabled = true;
+
+        // Add event listeners to the role select and isActive checkbox
+        roleSelect.addEventListener('change', toggleSaveButton);
+        isActiveCheckbox.addEventListener('change', toggleSaveButton);
+
+        // Function to toggle the save button state
+        function toggleSaveButton() {
+            // Get the current values of the role and isActive elements
+            const currentRoleValue = roleSelect.value;
+            const currentIsActiveValue = isActiveCheckbox.checked;
+
+            // Check if either the role or isActive value is changed from initial value
+            if (currentRoleValue !== initialRoleValue || currentIsActiveValue !== initialIsActiveValue) {
+                // Enable the save button if either the role or isActive value is changed
+                saveButton.disabled = false;
+            } else {
+                // Disable the save button if both the role and isActive values are unchanged
+                saveButton.disabled = true;
+            }
+        }
+    });
+    function editUser(userId, role, isActive) {
+        // Open the edit modal
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        editModal.show();
+
+        // Populate form fields with values
+        document.getElementById('editRole').value = role;
+        document.getElementById('editStatus').checked = isActive;
+    }
+    document.getElementById('saveEdit').addEventListener('click', function () {
+        // Get updated user details from the modal form
+        var role = document.getElementById('editRole').value;
+        var status = document.getElementById('editStatus').checked ? 'Active' : 'Inactive';
+        // Log the form data
+        console.log('Updated Role:', role);
+        console.log('Updated Status:', status);
+        // Perform further processing (e.g., update user details)
+        // ...
+        // Close the modal
+        var editUserModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+        editUserModal.hide();
+    });
+</script>
+
+<!------------------------------------------- JS FOR CHARTTTTTTT ----------------------------------->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    //function which takes user data and sets to chart
+    function showChart(assigned, pending, inProgress, completedBeforeTime, completedAfterTime) {
+        if (assigned === 0 && pending === 0 && inProgress === 0 && completedBeforeTime === 0 && completedAfterTime === 0) {
+            // Show "No data found" message
+            $("#tasksChart").replaceWith('<div class="text-center">No data found</div>');
+        }
+        else {
+            var chartData = {
+                labels: ['Completed After Deadline', 'Assigned', 'Pending', 'Completed On/Before Time', 'In Progress'],
+                datasets: [{
+                    label: 'Tasks',
+                    data: [assigned, pending, inProgress, completedBeforeTime, completedAfterTime],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rg(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            $("#tasksChart").replaceWith('<canvas id="tasksChart" width="400" height="400"></canvas>');
+
+            // Get canvas element
+            var ctx = document.getElementById('tasksChart').getContext('2d');
+
+            //if canvas is already present then remove it
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+            // Create chart
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Tasks Chart'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        var modalInstance = new bootstrap.Modal(document.getElementById("chartModal"));
+        modalInstance.show();
+
+    }
+
+
+</script>

@@ -13,6 +13,7 @@ namespace TaskManagementMVC.Services.IServices
     {
         IEnumerable<TeamListingViewModel> GetTeamListing(int managerId);
         TeamMembersViewModel GetTeamMembersData(int ManagerId);
-        void SetTeamMembersData(TeamMembersViewModel viewModel);
+        TeamWorkDetailsViewModel GetTeamWorkDetails(int teamId);
+        void SetTeamMembersData(TeamMembersViewModel viewModel, long PMId);
     }
 }

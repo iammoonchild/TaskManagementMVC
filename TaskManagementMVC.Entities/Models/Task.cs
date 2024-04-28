@@ -23,6 +23,10 @@ public partial class Task
 
     public string TaskDescription { get; set; } = null!;
 
+    public DateOnly Deadline { get; set; }
+
+    public string TaskTitle { get; set; } = null!;
+
     public virtual AspNetUser AssignedBy { get; set; } = null!;
 
     public virtual AspNetUser? AssignedTo { get; set; }

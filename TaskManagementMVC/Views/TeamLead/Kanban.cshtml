@@ -1,0 +1,237 @@
+﻿@using TaskManagementMVC.Entities.ViewModels.Common;
+@model KanbanViewModel
+@{
+
+}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container-fluid mt-4">
+    <div class="new-task-wrapper d-flex justify-content-between align-items-center">
+        <div class="filter-wrapper w-75 d-flex justify-content-between align-items-center">
+            <div class="search-wrapper">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search tasks..." aria-label="Search tasks"
+                           aria-describedby="searchIcon">
+                    <button class="btn btn-outline-secondary" type="button" id="searchIcon">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="dropdown">
+                <label for="filterDropdown" class="form-label">Filter Tasks:</label>
+                <button class="btn btn-light border dropdown-toggle" type="button" id="filterDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Filter
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                    <li><a class="dropdown-item" data-filter="today">Due Today</a></li>
+                    <li><a class="dropdown-item" data-filter="week">Due This Week</a></li>
+                    <li><a class="dropdown-item" data-filter="nextWeek">Due Next Week</a></li>
+                    <li><a class="dropdown-item" data-filter="month">Due This Month</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+            <span class="bi bi-plus-circle-fill me-2"></span>
+            Add New Task
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addTaskForm">
+                            <div class="mb-3">
+                                <label for="taskTitle" class="form-label">Task Title</label>
+                                <input type="text" class="form-control" id="taskTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDescription" class="form-label">Task Description</label>
+                                <textarea class="form-control" id="taskDescription" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskType" class="form-label">Task type</label>
+                                <select class="form-select" id="taskType" required>
+                                    <option value="">Select Task Type</option>
+                                    <option value="1">
+                                        <span>
+                                            Bug
+                                        </span>
+                                    </option>
+                                    <option value="2">
+                                        <span>
+                                            Feature
+                                        </span>
+                                    </option>
+                                    <option value="3">
+                                        <span>
+                                            Task
+                                        </span>
+                                    </option>
+                                    <option value="4">
+                                        <span>
+                                            Sub Task
+                                        </span>
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskType" class="form-label">Assign To</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle form-control bg-none text-dark text-start" type="button" id="assignedToDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select User
+                                    </button>
+                                    <ul class="dropdown-menu user-dropdown w-100" aria-labelledby="assignedToDropdown">
+                                        @foreach (var user in Model.UserList)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="#" data-value="@user.Id">
+                                                    @if (user.Avatar != null)
+                                                    {
+                                                        <img class="dropdownimg user-avatar-dropdown" src="@user.Avatar" alt="User Logo">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="dropdownimg user-avatar-dropdown" src="~/images/memberavatar.png" alt="User Logo">
+                                                    }
+                                                    @user.Name
+                                                </a>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDeadline" class="form-label">Deadline</label>
+                                <input type="date" class="form-control" id="taskDeadline" min="@DateTime.Now.ToString("yyyy-MM-dd")" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Task</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="kanban-wrapper" class="kanban-wrapper">
+        <partial name="_KanbanBoardPartial" model="Model" />
+    </div>
+</div>
+
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+<script>
+    // Function to handle scroll event
+    function handleScroll() {
+        var kanbanWrapper = document.getElementById("kanban-wrapper");
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Get the offset position of the kanban wrapper
+        var offsetTop = kanbanWrapper.offsetTop;
+
+        // Check if the scroll position is greater than or equal to the offset position
+        if (scrollTop >= offsetTop) {
+            // Add a class to the kanban wrapper to change its positioning
+            kanbanWrapper.classList.add("sticky");
+        } else {
+            // Remove the class if the scroll position is above the offset position
+            kanbanWrapper.classList.remove("sticky");
+        }
+    }
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+
+    //to add new task submit form
+    document.getElementById("addTaskForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        debugger;
+        var assignedToValue = document.getElementById("assignedToDropdown").getAttribute("data-userId");
+        var task = {
+            title: document.getElementById("taskTitle").value,
+            description: document.getElementById("taskDescription").value,
+            type: document.getElementById("taskType").value,
+            state: 1,
+            assignedToId: assignedToValue,
+            deadline: document.getElementById("taskDeadline").value,
+        };
+        $.ajax({
+            url: '/TeamLead/AddNewTask',
+            method: 'POST',
+            data: task,
+            success: function (response) {
+                // Handle successful response
+                console.log(response);
+                $("#kanban-wrapper").html(response);
+                $('#overlay').fadeOut();
+                $('.modal-backdrop').remove();
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                $('#overlay').fadeOut();
+                console.error(xhr.responseText);
+            }
+        });
+
+        //addTaskToBoard(task, "new-tasks");
+        //close the modal
+        var modal = bootstrap.Modal.getInstance(document.getElementById("addTaskModal"));
+        modal.hide();
+    });
+
+
+    // ****************************  filter script *****************************************
+    $(document).ready(function () {
+        $('.dropdown-item').on('click', function () {
+            var filter = $(this).data('filter');
+            var selectedFilter = $(this).text();
+            $('#filterDropdown').text(selectedFilter);
+            var endDate;
+
+            // Calculate the end date based on the selected filter
+            var currentDate = new Date();
+            switch (filter) {
+                case 'today':
+                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+                    break;
+                case 'week':
+                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7 - currentDate.getDay()));
+                    break;
+                case 'nextWeek':
+                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (14 - currentDate.getDay()));
+                    break;
+                case 'month':
+                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                    break;
+            }
+
+            console.log('End Date:', endDate);
+        });
+    });
+
+    // *********** ***************
+    // Get the dropdown button and dropdown menu
+    var dropdownButton = document.getElementById("assignedToDropdown");
+    var dropdownMenu = dropdownButton.nextElementSibling;
+
+    // Attach event listeners to dropdown items
+    dropdownMenu.querySelectorAll(".dropdown-item").forEach(function (item) {
+        item.addEventListener("click", function () {
+            var userName = this.textContent.trim();
+            dropdownButton.textContent = userName;
+            //add data-userid attribute to dropdown button
+            dropdownButton.setAttribute("data-userId", this.getAttribute("data-value"))
+        });
+    });
+
+</script>
