@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.IRepositories;
+using TaskManagementMVC.Repositories.Utilities;
 
 namespace TaskManagementMVC.Repositories.Repositories
 {
@@ -18,19 +20,20 @@ namespace TaskManagementMVC.Repositories.Repositories
             _context = context;
         }
 
-        public void SetTeamMembersData(TeamMembersViewModel viewModel)
+        public void SetTeamMembersData(TeamMembersViewModel viewModel, long PMId)
         {
             //here first register the team
             Team team = new Team
             {
-                Pmid = 6,
+                Pmid = PMId,
                 CreatedDate = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
             };
             _context.Add(team);
             _context.SaveChanges();
+            var subject = "PTM | Team Invitation";
             foreach (var item in viewModel.FirstName)
             {
-                _context.AspNetUsers.Add(new AspNetUser
+                var member = new AspNetUser
                 {
                     Name = viewModel.FirstName[viewModel.FirstName.IndexOf(item)] + " " + viewModel.LastName[viewModel.FirstName.IndexOf(item)],
                     Email = viewModel.Email[viewModel.FirstName.IndexOf(item)],
@@ -38,7 +41,12 @@ namespace TaskManagementMVC.Repositories.Repositories
                     Password = GenerateRandomPassword(8),
                     OldPassword = GenerateRandomPassword(8),
                     TeamId = team.TeamId,
-                });
+                    IsPasswordChanged = false
+                };
+                var emailBody = EmailSender.GetEmailTemplateForInvitation(member.Email,member.Password);
+                member.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(member.Password, HashType.SHA512);
+                _context.AspNetUsers.Add(member);
+                EmailSender.SendEmail(member.Email, emailBody, subject);
             }
             _context.SaveChanges();
         }
@@ -72,11 +80,6 @@ namespace TaskManagementMVC.Repositories.Repositories
             viewModel.GetTeamMembersData = data.ToList();
             viewModel.UserName = _context.AspNetUsers.Where(x => x.Id == managerId).Select(x => x.Name).FirstOrDefault();
             return viewModel;
-        }
-
-        public List<AspNetUser> GetAspNetUserTable()
-        {
-            return _context.AspNetUsers.ToList();
         }
 
         public IQueryable<Team> GetTeams(int managerId)

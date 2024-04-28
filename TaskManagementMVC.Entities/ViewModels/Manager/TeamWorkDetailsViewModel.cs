@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementMVC.Repositories.Enums;
 
 namespace TaskManagementMVC.Entities.ViewModels.Manager;
 public class TeamWorkDetailsViewModel
@@ -21,4 +22,5 @@ public class TeamMemberDetails
     public int NoOfTaskCompletedOnBeforeDeadline { get; set; }
     public int NoOfTaskCompletedAfterDeadline { get; set; }
     public bool IsMemberActive { get; set; }
+    public int Role { get; set; }
 }

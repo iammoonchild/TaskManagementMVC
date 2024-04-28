@@ -11,7 +11,7 @@ using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.Enums;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
-using static TaskManagementMVC.Repositories.Enums.TaskStates;
+using static TaskManagementMVC.Repositories.Enums.TaskUtilities;
 
 namespace TaskManagementMVC.Services.Services
 {
@@ -32,8 +32,8 @@ namespace TaskManagementMVC.Services.Services
                 teamListing.Add(new TeamListingViewModel
                 {
                     TeamId = team.TeamId,
-                    TeamAvatar = team.AspNetUsers.Where(x => x.RoleId == (short)RoleEnum.Role.TeamLeader).FirstOrDefault().Avatar,
-                    TeamName = "Team " + team.AspNetUsers.Where(x => x.RoleId == (short)RoleEnum.Role.TeamLeader).FirstOrDefault().Name,
+                    TeamAvatar = team.AspNetUsers.Where(x => x.RoleId == (short)RoleEnum.Role.TeamLeader).FirstOrDefault()?.Avatar ?? "",
+                    TeamName = "Team " + team.AspNetUsers.Where(x => x.RoleId == (short)RoleEnum.Role.TeamLeader).FirstOrDefault()?.Name,
                     TeamSize = team.AspNetUsers.Count,
                     CreatedOn = team.CreatedDate
                 });
@@ -59,6 +59,7 @@ namespace TaskManagementMVC.Services.Services
                 NoOfTaskInProgress = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.TaskStateId == (int)TaskStateEnum.InProgress).Count(),
                 NoOfTaskCompletedOnBeforeDeadline = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.IsCompleted==true).Count(),
                 NoOfTaskCompletedAfterDeadline = x.TaskAssignedTos.Where(y => y.AssignedToId == x.Id && y.IsCompleted == true).Count(),
+                Role = x.RoleId
             }).ToList();
             return new TeamWorkDetailsViewModel
             {
@@ -67,9 +68,9 @@ namespace TaskManagementMVC.Services.Services
             };
         }
 
-        public void SetTeamMembersData(TeamMembersViewModel viewModel)
+        public void SetTeamMembersData(TeamMembersViewModel viewModel, long PMId)
         {
-            _managerRepo.SetTeamMembersData(viewModel);
+            _managerRepo.SetTeamMembersData(viewModel, PMId);
         }
     }
 }

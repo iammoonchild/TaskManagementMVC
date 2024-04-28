@@ -8,6 +8,8 @@ using TaskManagementMVC.Services.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DbTaskManagementContext>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
@@ -16,6 +18,8 @@ builder.Services.AddScoped<IManagerRepo, ManagerRepo>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<ITeamLeadRepo, TeamLeadRepo>();
+builder.Services.AddScoped<ITeamLeadService, TeamLeadService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 
 var app = builder.Build();
@@ -32,6 +36,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

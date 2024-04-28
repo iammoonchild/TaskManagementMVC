@@ -1,0 +1,111 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TaskManagementMVC.Entities.Models;
+using TaskManagementMVC.Entities.ViewModels.Common;
+using TaskManagementMVC.Repositories.Enums;
+using TaskManagementMVC.Repositories.IRepositories;
+using TaskManagementMVC.Services.IServices;
+using static TaskManagementMVC.Repositories.Enums.TaskUtilities;
+
+namespace TaskManagementMVC.Services.Services;
+public class TeamLeadService : ITeamLeadService
+{
+    private readonly ITeamLeadRepo _Repo;
+    private readonly ITaskRepo _TaskRepo;
+    private readonly IUserRepo _UserRepo;
+    public TeamLeadService(ITeamLeadRepo repo, ITaskRepo taskRepo, IUserRepo userRepo)
+    {
+        _Repo = repo;
+        _TaskRepo = taskRepo;
+        _UserRepo = userRepo;
+
+    }
+
+    public TaskCardViewModel AddNewTask(TaskCardViewModel model, long currentUserId)
+    {
+        AspNetUser user = _UserRepo.GetUserFromUserId(currentUserId);
+        Entities.Models.Task taskToAdd = new()
+        {
+            TaskTypeId = (int)model.Type,
+            TaskStateId = (int)model.State,
+            AssignedToId = model.AssignedToId,
+            AssignedById = currentUserId,
+            CreatedById = currentUserId,
+            TaskTitle = model.Title,
+            TaskDescription = model.Description,
+            Deadline = model.Deadline,
+            IsCompleted = false
+        };
+        Entities.Models.Task task = _TaskRepo.AddTask(taskToAdd);
+        TaskLog taskLog = new()
+        {
+            TaskId = task.TaskId,
+            LogTypeId = (short)TaskLogTypeEnum.Created,
+            LogDescription = $"Task created By {user.Name} on {DateTime.Now}",
+            CommentedById = currentUserId
+        };
+        _TaskRepo.AddTaskLog(taskLog);
+
+        return new TaskCardViewModel()
+        {
+            Id = task.TaskId,
+            Title = task.TaskTitle,
+            Description = task.TaskDescription,
+            Type = (TaskUtilities.TaskTypeEnum)task.TaskTypeId,
+            State = (TaskUtilities.TaskStateEnum)task.TaskStateId,
+            AssignedToId = model.AssignedToId,
+            //AssignedToName = task.AssignedTo.Name,
+            //AssignedToAvatar = task.AssignedTo.Avatar,
+            Deadline = task.Deadline
+        };
+    }
+
+    public long GetTeamIdFromUserId(long UserId)
+    {
+        return _Repo.GetTeamIdFromUserId(UserId);
+    }
+
+    public KanbanViewModel GetTeamLeadKanban(long teamId)
+    {
+        IQueryable<Entities.Models.Task> taskCards = _TaskRepo.GetTeamTasksFromTeamId(teamId);
+        IQueryable<AspNetUser> users = _UserRepo.GetTeamUsersFromTeamId(teamId);
+        KanbanViewModel kanban = new()
+        {
+            TeamId = teamId,
+            TeamName = $"Team - {users.First(x => x.RoleId == (short)RoleEnum.Role.TeamLeader).Name}",
+            TaskCards = 
+                taskCards.Select(x => new TaskCardViewModel
+                {
+                    Id = x.TaskId,
+                    Title = x.TaskTitle,
+                    Description = x.TaskDescription,
+                    Type = (TaskTypeEnum)x.TaskTypeId,
+                    State = (TaskStateEnum)x.TaskStateId,
+                    AssignedToId = x.AssignedTo.Id,
+                    AssignedToName = x.AssignedTo.Name,
+                    AssignedToAvatar = x.AssignedTo.Avatar ?? "/images/memberavatar.png",
+                    AssignedBy = x.AssignedBy.Name,
+                    CreatedBy = x.CreatedBy.Name,
+                    Deadline = x.Deadline
+                }).ToList()
+            ,
+             UserList = users.Select(x => new KanbanUserListViewModel
+             {
+                 Id = x.Id,
+                 Name = x.Name,
+                 Avatar = x.Avatar
+             }).ToList()
+        };
+        return kanban;
+    }
+
+    //ON HOLDDDDDDDDDDDDD
+    public List<Entities.ViewModels.Common.TaskCardViewModel> GetTeamTasksFromTeamId(long teamId)
+    {
+        IQueryable<AspNetUser> users = _Repo.GetTeamUsersWithTasksFromTeamId(teamId);
+        return new();
+    }
+}

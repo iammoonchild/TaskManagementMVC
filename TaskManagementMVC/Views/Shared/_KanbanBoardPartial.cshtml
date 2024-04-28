@@ -1,0 +1,132 @@
+﻿@using TaskManagementMVC.Entities.ViewModels.Common;
+@model KanbanViewModel
+@{
+    Layout = null;
+}
+
+<div class="kanban-board overflow-y-scroll d-flex mt-4">
+    <div class="column col-3 me-4" id="new-tasks">
+        <div class="column-wrapper">
+            <div class="bg-light p-2 task-header d-flex justify-content-center align-items-center">
+                <h3 class="text-center">New Tasks</h3>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="column col-3 me-4" id="pending-tasks">
+        <div class="column-wrapper">
+            <div class="bg-warning p-2 task-header d-flex justify-content-center align-items-center">
+                <h3 class="text-center">Pending Tasks</h3>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="column col-3 me-4" id="in-progress-tasks">
+        <div class="column-wrapper">
+            <div class="bg-success p-2 task-header d-flex justify-content-center align-items-center">
+                <h3 class="text-center">In Progress Tasks</h3>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="column col-3 me-4" id="completed-tasks">
+        <div class="column-wrapper">
+            <div class="bg-secondary p-2 task-header d-flex justify-content-center align-items-center">
+                <h3 class="text-center">Completed Tasks</h3>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var tasks = [];
+    @if (Model.TaskCards != null && Model.TaskCards.Any())
+    {
+        @foreach (var task in Model.TaskCards)
+        {
+            <text>
+                tasks.push(@Html.Raw(Json.Serialize(task)));
+            </text>
+        }
+    }
+        console.log(tasks);
+    // Initialize the kanban board with tasks
+    tasks.forEach(task => {
+        addTaskToBoard(task, "new-tasks");
+    });
+
+    // Function to add task to the board
+    function addTaskToBoard(task, columnId) {
+        var column = document.getElementById(columnId);
+        var taskCard = document.createElement("div");
+        taskCard.className = "card p-0 mb-3";
+        taskCard.draggable = true;
+        taskCard.dataset.task = JSON.stringify(task);
+        taskCard.innerHTML = `
+                                        <div class="card-header text-uppercase" data-taskid=${task.id}>${task.title}</div>
+                                        <div class="card-body">
+                                            <p class="card-text">${task.description}</p>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between flex-wrap">
+                                            <div>
+                                                <img src="${task.assignedToAvatar}" alt="User Logo" class="user-logo">
+                                                ${task.assignedToName}
+                                            </div>
+                                            <div class="">
+                                                Deadline: ${task.deadline} <!-- Replace with actual deadline date -->
+                                            </div>
+                                        </div>
+                                    `;
+        taskCard.addEventListener('dragstart', handleDragStart);
+        column.appendChild(taskCard);
+        //animation to show card is added
+        taskCard.style.transform = "translateY(100%)";
+        taskCard.style.opacity = 0;
+        setTimeout(() => {
+            taskCard.style.transform = "translateY(0%)";
+            taskCard.style.opacity = 1;
+            taskCard.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+        }, 100);
+    }
+
+    // Enable drag and drop functionality
+    document.querySelectorAll('.card').forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+    });
+
+    document.querySelectorAll('.column').forEach(item => {
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+    });
+
+    var draggedItem = null;
+
+    function handleDragStart(event) {
+        draggedItem = this;
+        console.log("the parent node is ", this.parentNode);
+        draggedItem.dataset.originalColumn = draggedItem.parentNode.id;
+        event.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    function handleDrop(event) {
+        if (draggedItem) {
+            event.preventDefault();
+            var task = JSON.parse(draggedItem.dataset.task);
+            var originalColumnId = draggedItem.dataset.originalColumn; // Retrieve original column id
+            var column = this;
+
+            // Check if the dropped position is different from the original position
+            if (originalColumnId !== column.id) {
+                addTaskToBoard(task, column.id);
+                draggedItem.remove();
+            }
+        }
+    }
+
+</script>

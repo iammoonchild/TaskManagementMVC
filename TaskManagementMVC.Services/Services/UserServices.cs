@@ -1,13 +1,16 @@
-﻿using System;
+﻿using BCrypt.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Repositories.Repositories;
 using TaskManagementMVC.Services.IServices;
+using static TaskManagementMVC.Repositories.Enums.RoleEnum;
 
 namespace TaskManagementMVC.Services.Services
 {
@@ -19,32 +22,27 @@ namespace TaskManagementMVC.Services.Services
             _userRepo = userRepo;
         }
 
-        public bool CheckEmailDetails(string email)
+        public UserInfoViewModel CheckUserWithCredentials(LoginViewModel model)
         {
-            List<AspNetUser> user = _userRepo.GetAspNetUserTable();
-             var check = user.Where(x => x.Email.Trim().ToLower() == (email.Trim().ToLower())).Any();
-            return check;
-        }
-
-        public string CheckLoginDetails(LoginViewModel loginViewModel)
-        {
-            List<AspNetUser> user = _userRepo.GetAspNetUserTable();
-            var check = user.Where(x => x.Email.Trim().ToLower() == (loginViewModel.Email.Trim().ToLower()) && x.Password == loginViewModel.Password).Select(x => x.RoleId).FirstOrDefault().ToString() ?? "0";
-            return check;
-        }
-
-        public UserInfoViewModel CheckValidUserWithRole(string email, string password)
-        {
-            List<AspNetUser> user = _userRepo.GetAspNetUserTable();
-            var check = user.Where(x => x.Email.Trim().ToLower() == (email.Trim().ToLower()) && x.Password == password).Select(x => new UserInfoViewModel
+            AspNetUser user = _userRepo.GetUserByEmail(model.Email);
+            if (BCrypt.Net.BCrypt.EnhancedVerify(model.Password, user.Password, HashType.SHA512))
             {
-                UserId = x.Id.ToString(),
-                Name = x.Name,
-                Email = x.Email,
-                RoleId = x.RoleId,
-                Role = x.Role.RoleName
-            }).FirstOrDefault();
-            return check;
+                return new UserInfoViewModel
+                {
+                    UserId = user.Id.ToString(),
+                    Name = user.Name,
+                    Email = user.Email,
+                    RoleId = user.RoleId,
+                    Role = user.Role.RoleName,
+                    IsPasswordChanged = user.IsPasswordChanged ?? false
+                };
+            }
+            return null;
+        }
+
+        public void ResetPassword(ResetPWDViewModel model)
+        {
+            _userRepo.ResetPassword(model);
         }
     }
 }

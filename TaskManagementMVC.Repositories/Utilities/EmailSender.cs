@@ -1,30 +1,35 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace TaskManagementMVC.Utilities
+namespace TaskManagementMVC.Repositories.Utilities;
+
+public static class EmailSender
 {
-    public static class EmailSender
+    public static void SendEmail(string email, string body, string subject)
     {
-        public static void SendEmail(string email, string body, string subject)
-        {
 
-            var client = new SmtpClient("smtp.office365.com", 587);
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("noreply.ci.tatvasoft@gmail.com", "chaz fipw prel ubxv");
-            client.EnableSsl = true;
+        var client = new SmtpClient("smtp.gmail.com", 587);
+        client.UseDefaultCredentials = false;
+        client.Credentials = new NetworkCredential("noreply.ci.tatvasoft@gmail.com", "chaz fipw prel ubxv");
+        client.EnableSsl = true;
 
-            var message = new MailMessage();
-            message.From = new MailAddress("noreply.ci.tatvasoft@gmail.com");
-            message.To.Add(email);
-            message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
-            client.Send(message);
-        }
+        var message = new MailMessage();
+        message.From = new MailAddress("noreply.ci.tatvasoft@gmail.com");
+        message.To.Add(email);
+        message.Subject = subject;
+        message.Body = body;
+        message.IsBodyHtml = true;
+        client.Send(message);
+    }
 
-        public static string GetEmailTemplateForInvitation(string userName,string password)
-        {
-            string emailBody = @"
+    public static string GetEmailTemplateForInvitation(string userName, string password)
+    {
+        string emailBody = @"
                     <!DOCTYPE html>
                     <html lang=""en"">
                     <head>
@@ -40,8 +45,8 @@ namespace TaskManagementMVC.Utilities
                             </div>
                             <div style=""padding: 20px;"">
                                 <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;"">You've been invited to join our team!</p>
-                                <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;""><strong>Username:</strong>"+ userName + @"</p>
-                                <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;""><strong>Password:</strong>"+ password + @"</p>
+                                <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;""><strong>Username:</strong>" + userName + @"</p>
+                                <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;""><strong>Password:</strong>" + password + @"</p>
                                 <p style=""font-size: 16px; margin: 0 0 20px; color: #666666;"">Please click the button below to access the portal:</p>
                                 <a href=""https://example.com/portal"" style=""display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; margin-top: 20px;"">Go to Portal</a>
                             </div>
@@ -49,7 +54,6 @@ namespace TaskManagementMVC.Utilities
                     </body>
                     </html>";
 
-            return emailBody;
-        }
+        return emailBody;
     }
 }

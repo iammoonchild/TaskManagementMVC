@@ -4,19 +4,29 @@ using TaskManagementMVC.Services.IServices;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Authorization;
 using TaskManagementMVC.Entities.ViewModels.Manager;
+using System.Security.Claims;
+using System.Text;
 
 namespace TaskManagementMVC.Controllers
 {
-
+    [Route("Manager")]
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
-        public ManagerController(IManagerService managerService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ManagerController(IManagerService managerService,IHttpContextAccessor http)
         {
             _managerService = managerService;
+            _httpContextAccessor = http;
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Route("Dashboard")]
+        public IActionResult Dashboard()
         {
             return View();
         }
@@ -28,10 +38,10 @@ namespace TaskManagementMVC.Controllers
             TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
             return View(model);
         }
-
-        public IActionResult ManagerDashboard()
+        [Route("MyTeams")]
+        public IActionResult MyTeams()
         {
-            int managerId = 6;
+            var managerId = int.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
             IEnumerable<TeamListingViewModel> model = _managerService.GetTeamListing(managerId);
             return View(model);
         }
@@ -42,17 +52,15 @@ namespace TaskManagementMVC.Controllers
             return PartialView("~/Views/Shared/Manager/_TeamListing.cshtml", model);
         }
 
-        [HttpPost]
+        [HttpPost("SetTeamMembersData")]
         public IActionResult SetTeamMembersData(TeamMembersViewModel viewModel)
         {
-            var ManagerId = 6;
-            var check = viewModel.FirstName.First();
-            _managerService.SetTeamMembersData(viewModel);
-
+            long PMId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            _managerService.SetTeamMembersData(viewModel, PMId);
             return RedirectToAction("GetTeamListing",new {managerId = 6});
         }
-
-        public IActionResult TeamWorkDetails([FromQuery] int teamId)
+        [Route("MyTeams/{teamId}")]
+        public IActionResult TeamWorkDetails([FromRoute] int teamId)
         {
             TeamWorkDetailsViewModel model = _managerService.GetTeamWorkDetails(teamId);
             return View(model);

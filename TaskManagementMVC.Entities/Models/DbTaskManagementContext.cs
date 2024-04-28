@@ -75,6 +75,7 @@ public partial class DbTaskManagementContext : DbContext
 
             entity.Property(e => e.IsCompleted).HasDefaultValueSql("false");
             entity.Property(e => e.TaskDescription).HasColumnType("character varying");
+            entity.Property(e => e.TaskTitle).HasColumnType("character varying");
 
             entity.HasOne(d => d.AssignedBy).WithMany(p => p.TaskAssignedBies)
                 .HasForeignKey(d => d.AssignedById)
@@ -120,7 +121,6 @@ public partial class DbTaskManagementContext : DbContext
 
             entity.HasOne(d => d.CommentedBy).WithMany(p => p.TaskLogCommentedBies)
                 .HasForeignKey(d => d.CommentedById)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_commentedbyid");
 
             entity.HasOne(d => d.LogType).WithMany(p => p.TaskLogs)
@@ -135,17 +135,14 @@ public partial class DbTaskManagementContext : DbContext
 
             entity.HasOne(d => d.TransferredBy).WithMany(p => p.TaskLogTransferredBies)
                 .HasForeignKey(d => d.TransferredById)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_transbyid");
 
             entity.HasOne(d => d.TransferredFrom).WithMany(p => p.TaskLogTransferredFroms)
                 .HasForeignKey(d => d.TransferredFromId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_transfromid");
 
             entity.HasOne(d => d.TransferredTo).WithMany(p => p.TaskLogTransferredTos)
                 .HasForeignKey(d => d.TransferredToId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_transtoid");
         });
 

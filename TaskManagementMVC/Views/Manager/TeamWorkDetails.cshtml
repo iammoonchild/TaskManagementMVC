@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach(var member in Model.TeamMemberDetails)
+                                @foreach (var member in Model.TeamMemberDetails)
                                 {
                                     <tr>
                                         <td>@member.MemberId</td>
@@ -49,7 +49,7 @@
                                             @totalTaskCompleted
                                         </td>
                                         <td class="d-flex g-2">
-                                            <button type="button" class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#editModal">
+                                            <button type="button" class="btn btn-outline-success me-2" onclick="editUser(@member.MemberId,@member.Role,@member.IsMemberActive.ToString().ToLower())">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <button type="button" class="btn btn-outline-primary" onclick="showChart(@member.NoOfTaskAssigned,@member.NoOfTaskPending,@member.NoOfTaskInProgress,@member.NoOfTaskCompletedOnBeforeDeadline,@member.NoOfTaskCompletedAfterDeadline)">
@@ -151,39 +151,39 @@
         var container = document.getElementById('teamMembersContainer');
         var template = document.createElement('div');
         template.innerHTML = `
-    <div class="team-member-wrapper">
-        <hr>
-                        <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
-                            <h5>Team Member</h5>
-                            <button type="button" class="btn btn-danger delete-member"><i class="bi bi-trash"></i></button>
-                        </div>
-    <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
-                        <label for="FirstName[]">First Name</label>
+            <div class="team-member-wrapper">
+                <hr>
+                                <div class="d-flex mb-2 ps-1 justify-content-between align-items-center teamMember-name-delete">
+                                    <h5>Team Member</h5>
+                                    <button type="button" class="btn btn-danger delete-member"><i class="bi bi-trash"></i></button>
+                                </div>
+            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="FirstName[]" placeholder="" required>
+                                <label for="FirstName[]">First Name</label>
 
-                    </div>
-                    <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" name="LastName[]" placeholder="" required>
-                        <label for="LastName[]">Last Name</label>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" name="LastName[]" placeholder="" required>
+                                <label for="LastName[]">Last Name</label>
 
-                    </div>
-                    <div class="mb-3 form-floating">
-                        <input type="email" class="form-control" name="Email[]" placeholder="" required>
-                        <label for="Email[]">Email ID</label>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="email" class="form-control" name="Email[]" placeholder="" required>
+                                <label for="Email[]">Email ID</label>
 
-                    </div>
-                    <div class="mb-3 form-floating">
-                        <select class="form-select" name="Role[]" required>
-                            <option value="">Select Role</option>
-                            <option value="Role 1">Role 1</option>
-                            <option value="Role 2">Role 2</option>
-                            <!-- Add more roles as needed -->
-                        </select>
-                        <label for="Role[]">Role</label>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <select class="form-select" name="Role[]" required>
+                                    <option value="">Select Role</option>
+                                    <option value="Role 1">Role 1</option>
+                                    <option value="Role 2">Role 2</option>
+                                    <!-- Add more roles as needed -->
+                                </select>
+                                <label for="Role[]">Role</label>
 
-                    </div>
-                    </div>
-    `;
+                            </div>
+                            </div>
+            `;
         container.appendChild(template);
     });
 
@@ -246,8 +246,8 @@
                         <label for="editRole" class="form-label">Role</label>
                         <select class="form-select" id="editRole" required>
                             <option value="">Select Role</option>
-                            <option value="Role 1">Role 1</option>
-                            <option value="Role 2">Role 2</option>
+                            <option value="2">Team Lead</option>
+                            <option value="3">SE</option>
                             <!-- Add more roles as needed -->
                         </select>
                     </div>
@@ -267,7 +267,49 @@
 
 <!-- JS for Editing User -->
 <script>
-        document.getElementById('saveEdit').addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get references to the form elements and the save button
+        const roleSelect = document.getElementById('editRole');
+        const isActiveCheckbox = document.getElementById('editStatus');
+        const saveButton = document.getElementById('saveEdit');
+
+        // Initialize variables to store the initial values
+        let initialRoleValue = roleSelect.value;
+        let initialIsActiveValue = isActiveCheckbox.checked;
+
+        // Disable the save button initially
+        saveButton.disabled = true;
+
+        // Add event listeners to the role select and isActive checkbox
+        roleSelect.addEventListener('change', toggleSaveButton);
+        isActiveCheckbox.addEventListener('change', toggleSaveButton);
+
+        // Function to toggle the save button state
+        function toggleSaveButton() {
+            // Get the current values of the role and isActive elements
+            const currentRoleValue = roleSelect.value;
+            const currentIsActiveValue = isActiveCheckbox.checked;
+
+            // Check if either the role or isActive value is changed from initial value
+            if (currentRoleValue !== initialRoleValue || currentIsActiveValue !== initialIsActiveValue) {
+                // Enable the save button if either the role or isActive value is changed
+                saveButton.disabled = false;
+            } else {
+                // Disable the save button if both the role and isActive values are unchanged
+                saveButton.disabled = true;
+            }
+        }
+    });
+    function editUser(userId, role, isActive) {
+        // Open the edit modal
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        editModal.show();
+
+        // Populate form fields with values
+        document.getElementById('editRole').value = role;
+        document.getElementById('editStatus').checked = isActive;
+    }
+    document.getElementById('saveEdit').addEventListener('click', function () {
         // Get updated user details from the modal form
         var role = document.getElementById('editRole').value;
         var status = document.getElementById('editStatus').checked ? 'Active' : 'Inactive';
@@ -286,59 +328,66 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     //function which takes user data and sets to chart
-    function showChart(assigned,pending,inProgress,completedBeforeTime,completedAfterTime){
-        var chartData = {
-            labels: ['Completed After Deadline', 'Assigned', 'Pending', 'Completed On/Before Time', 'In Progress'],
-            datasets: [{
-                label: 'Tasks',
-                data: [assigned,pending,inProgress,completedBeforeTime,completedAfterTime],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rg(153, 102, 255, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        };
-
-        $("#tasksChart").replaceWith('<canvas id="tasksChart" width="400" height="400"></canvas>');
-
-        // Get canvas element
-        var ctx = document.getElementById('tasksChart').getContext('2d');
-
-        //if canvas is already present then remove it
-        if(window.myChart){
-            window.myChart.destroy();
+    function showChart(assigned, pending, inProgress, completedBeforeTime, completedAfterTime) {
+        if (assigned === 0 && pending === 0 && inProgress === 0 && completedBeforeTime === 0 && completedAfterTime === 0) {
+            // Show "No data found" message
+            $("#tasksChart").replaceWith('<div class="text-center">No data found</div>');
         }
-        // Create chart
-        var myChart = new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Tasks Chart'
-                    },
-                    legend: {
-                        position: 'bottom'
+        else {
+            var chartData = {
+                labels: ['Completed After Deadline', 'Assigned', 'Pending', 'Completed On/Before Time', 'In Progress'],
+                datasets: [{
+                    label: 'Tasks',
+                    data: [assigned, pending, inProgress, completedBeforeTime, completedAfterTime],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rg(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            $("#tasksChart").replaceWith('<canvas id="tasksChart" width="400" height="400"></canvas>');
+
+            // Get canvas element
+            var ctx = document.getElementById('tasksChart').getContext('2d');
+
+            //if canvas is already present then remove it
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+            // Create chart
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Tasks Chart'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
         var modalInstance = new bootstrap.Modal(document.getElementById("chartModal"));
         modalInstance.show();
+
     }
 
-    
+
 </script>

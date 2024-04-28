@@ -14,6 +14,6 @@ namespace TaskManagementMVC.Services.IServices
         IEnumerable<TeamListingViewModel> GetTeamListing(int managerId);
         TeamMembersViewModel GetTeamMembersData(int ManagerId);
         TeamWorkDetailsViewModel GetTeamWorkDetails(int teamId);
-        void SetTeamMembersData(TeamMembersViewModel viewModel);
+        void SetTeamMembersData(TeamMembersViewModel viewModel, long PMId);
     }
 }
