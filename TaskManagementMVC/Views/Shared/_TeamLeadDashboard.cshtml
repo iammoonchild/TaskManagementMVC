@@ -1,0 +1,182 @@
+﻿<div class="container mt-5">
+    <div class="row justify-content-between ">
+        <div class="col-md-6">
+            <!-- Left upper section with  -->
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Task Completion Rate</h5>
+                    <!--  chart -->
+                    <div id="-wrapper" style="display: flex; justify-content: center;">
+                        <canvas id="speedometer" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Right upper section with task status chart -->
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Task Status</h5>
+                    <!-- Task status chart -->
+                    <canvas id="taskStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <!-- Left lower section with user cards -->
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Team Members</h5>
+                    <!-- User cards -->
+                    <div class="d-flex justify-content-start flex-wrap">
+                        <!-- User card with task count -->
+                        <div class="user-wrapper d-flex flex-column justify-content-center">
+                            <div class="user-card mb-0">
+                                <img src="~/images/memberavatar.png" alt="User 1">
+                                <div class="task-count">5 tasks pending</div>
+                            </div>
+                            <div class="user-name text-center mt-0">
+                                <span>Harimati Ghoghari</span>
+                            </div>
+                        </div>
+                        <div class="user-wrapper d-flex flex-column justify-content-center">
+                            <div class="user-card mb-0">
+                                <img src="~/images/memberavatar.png" alt="User 1">
+                                <div class="task-count">8 tasks pending</div>
+                            </div>
+                            <div class="user-name text-center mt-0">
+                                <span>Harimati Ghoghari</span>
+                            </div>
+                        </div>
+                        <div class="user-wrapper d-flex flex-column justify-content-center">
+                            <div class="user-card mb-0">
+                                <img src="~/images/memberavatar.png" alt="User 1">
+                                <div class="task-count">10 tasks pending</div>
+                            </div>
+                            <div class="user-name text-center mt-0">
+                                <span>Harimati Ghoghari</span>
+                            </div>
+                        </div>
+                        <!-- Add more user cards as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Right lower section with additional content -->
+            <div class="card h-100">
+                <h5 class="card-title ps-2 pt-3 mb-2">Project Manager Instructions</h5>
+                <div class="card-body" id="instructionBoard">
+                    <ul id="instructionList">
+                        <li>Coordinate with team members to ensure tasks are distributed effectively.</li>
+                        <li>Review project timeline and adjust deadlines if necessary.</li>
+                        <li>Communicate with stakeholders regarding any delays or issues.</li>
+                        <li>Monitor task progress regularly and provide support where needed.</li>
+                        <li>Hold regular team meetings to discuss project status and address any concerns.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Dummy data for the task status chart
+    var taskStatusData = {
+        labels: ['Pending', 'In Progress', 'Completed'],
+        datasets: [{
+            label: 'Task Status',
+            data: [20, 30, 50], // Example data (replace with actual data)
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(75, 192, 192, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Create task status chart
+    var taskStatusChartCtx = document.getElementById('taskStatusChart').getContext('2d');
+    var taskStatusChart = new Chart(taskStatusChartCtx, {
+        type: 'bar',
+        data: taskStatusData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+    var canvas = document.getElementById('speedometer');
+    var ctx = canvas.getContext('2d');
+    var percent = 25; // Example completion percentage
+
+    var centerX = canvas.width / 2;
+    var centerY = canvas.height / 2;
+    var radius = canvas.width / 3;
+
+    var percent = 75; // Example completion percentage
+
+    function draw(percent) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw background arc
+        ctx.beginPath();
+        ctx.strokeStyle = '#00f';
+        ctx.lineWidth = 20;
+        ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+        ctx.stroke();
+
+        // Draw completion arc
+        ctx.beginPath();
+        var completionAngle = Math.PI + (percent / 100) * Math.PI;
+        ctx.strokeStyle = '#27FB19';
+        ctx.lineWidth = 20;
+        ctx.arc(centerX, centerY, radius, Math.PI, completionAngle);
+        ctx.stroke();
+
+        // Draw needle
+        ctx.translate(centerX, centerY);
+        var needleAngle = Math.PI + (percent / 100) * Math.PI;
+        ctx.rotate(needleAngle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(radius, 0);
+        ctx.strokeStyle = '#FF0000';
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        // Reset transformation
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        // Draw completion percentage
+        ctx.font = '20px Arial';
+        ctx.fillStyle = '#000';
+        ctx.textAlign = 'center';
+        ctx.fillText(percent + '%', centerX, centerY + 25);
+
+    }
+
+    function animate() {
+        var currentPercent = 0;
+        var interval = setInterval(function () {
+            draw(currentPercent);
+            currentPercent++;
+            if (currentPercent > percent) clearInterval(interval);
+        }, 10);
+    }
+
+    animate();
+</script>

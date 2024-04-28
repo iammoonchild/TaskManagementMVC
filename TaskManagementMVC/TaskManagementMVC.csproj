@@ -20,8 +20,4 @@
     <ProjectReference Include="..\TaskManagementMVC.Services\TaskManagementMVC.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Task\" />
-  </ItemGroup>
-
 </Project>

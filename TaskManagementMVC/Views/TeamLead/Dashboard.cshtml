@@ -3,4 +3,10 @@
     ViewBag.Title = "PTM | Dashboard";
     ViewBag.UserName = "First Last";
 }
-<h3>This is dashboard</h3>
+<div>
+    @*<partial name="~/Views/Shared/_TeamLeadDashboard.cshtml" />*@
+    @if (true)
+    {
+        Html.RenderPartial("~/Views/Shared/_TeamLeadDashboard.cshtml");
+    }
+</div>

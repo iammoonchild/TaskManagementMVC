@@ -18,10 +18,11 @@ public class TeamLeadController : Controller
     {
         return View();
     }
+    [HttpGet("Dashboard")]
     public IActionResult Dashboard()
     {
         var model = new { };
-        return View(model);
+        return View();
     }
 
     [HttpGet("Kanban")]
@@ -46,5 +47,10 @@ public class TeamLeadController : Controller
         long TeamId = _Service.GetTeamIdFromUserId(long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId")));
         KanbanViewModel kanbanViewModel = _Service.GetTeamLeadKanban(TeamId);
         return PartialView("_KanbanBoardPartial", kanbanViewModel);
+    }
+
+    public PartialViewResult TeamLeadDashboard()
+    {
+        return PartialView("_TeamLeadDashboard");
     }
 }
