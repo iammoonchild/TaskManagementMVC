@@ -63,11 +63,21 @@ public class TeamLeadService : ITeamLeadService
         };
     }
 
-    public void ChangeTaskStatus(long taskId, int statusId)
+    public void ChangeTaskStatus(long taskId, int statusId,long userId)
     {
+        var user = _UserRepo.GetUserFromUserId(userId);
         Entities.Models.Task task = _TaskRepo.GetTaskFromTaskId(taskId);
+        var oldState = task.TaskStateId;
         task.TaskStateId = statusId;
         _TaskRepo.UpdateTask(task);
+        TaskLog taskLog = new()
+        {
+            TaskId = taskId,
+            LogTypeId = (short)TaskLogTypeEnum.StateChanged,
+            LogDescription = $"Task state changed from {((TaskStateEnum)oldState).ToString()} to {((TaskStateEnum)statusId).ToString()} by {user.Name}",
+            CommentedById = user.Id
+        };
+        _TaskRepo.AddTaskLog(taskLog);
     }
 
     public long GetTeamIdFromUserId(long UserId)
@@ -75,10 +85,21 @@ public class TeamLeadService : ITeamLeadService
         return _Repo.GetTeamIdFromUserId(UserId);
     }
 
-    public KanbanViewModel GetTeamLeadKanban(long teamId)
+    public KanbanViewModel GetTeamLeadKanban(long teamId, string search=null, DateTime? dt=null)
     {
         IQueryable<Entities.Models.Task> taskCards = _TaskRepo.GetTeamTasksFromTeamId(teamId);
         IQueryable<AspNetUser> users = _UserRepo.GetTeamUsersFromTeamId(teamId);
+        if(!string.IsNullOrEmpty(search))
+        {
+            taskCards = taskCards.Where(x => x.TaskTitle.ToLower().Contains(search.Trim()) || x.TaskDescription.ToLower().Contains(search.Trim()));
+        }
+        if(dt != null)
+        {
+            if(dt.HasValue)
+            {
+                taskCards = taskCards.Where(x => x.Deadline >= new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) && x.Deadline <= new DateOnly(dt.Value.Year,dt.Value.Month,dt.Value.Day));
+            }
+        }
         KanbanViewModel kanban = new()
         {
             TeamId = teamId,

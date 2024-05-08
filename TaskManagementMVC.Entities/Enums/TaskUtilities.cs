@@ -31,6 +31,7 @@ public class TaskUtilities
         DeadlineChanged = 4,
         DescriptionChanged = 5,
         TitleChanged = 6,
-        Deleted = 7
+        Deleted = 7,
+        Commented = 8
     }
 }

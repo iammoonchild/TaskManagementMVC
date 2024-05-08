@@ -10,7 +10,7 @@
         <div class="filter-wrapper w-75 d-flex justify-content-between align-items-center">
             <div class="search-wrapper">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search tasks..." aria-label="Search tasks"
+                    <input type="text" id="kanban-search-input" class="form-control" placeholder="Search tasks..." aria-label="Search tasks"
                            aria-describedby="searchIcon">
                     <button class="btn btn-outline-secondary" type="button" id="searchIcon">
                         <i class="bi bi-search"></i>
@@ -23,7 +23,7 @@
                         data-bs-toggle="dropdown" aria-expanded="false">
                     Select Filter
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                <ul class="dropdown-menu search-filter" aria-labelledby="filterDropdown">
                     <li><a class="dropdown-item" data-filter="today">Due Today</a></li>
                     <li><a class="dropdown-item" data-filter="week">Due This Week</a></li>
                     <li><a class="dropdown-item" data-filter="nextWeek">Due Next Week</a></li>
@@ -171,34 +171,74 @@
 
     // ****************************  filter script *****************************************
     $(document).ready(function () {
-        $('.dropdown-item').on('click', function () {
+        $('#kanban-search-input').on('blur', function () {
+            var value = $(this).val().toLowerCase();
+            //find button who is having text as $('#filterDropdown').text and get the data-filter attribute value
+            var filter = $('.search-filter .dropdown-item').filter(function () {
+                return $(this).text() === $('#filterDropdown').text();
+            }).data('filter');
+            var date = new Date(GetDropdownEndDate(filter)).toISOString();
+            console.log(value);
+            $.ajax({
+                url: '/TeamLead/KanbanBoardPartial',
+                method: 'GET',
+                data: { 
+                    search : value,
+                    endDate : date
+                },
+                success: function (response) {
+                    $("#kanban-wrapper").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        $('.search-filter .dropdown-item').on('click', function () {
             var filter = $(this).data('filter');
             var selectedFilter = $(this).text();
             $('#filterDropdown').text(selectedFilter);
-            var endDate;
+            var endDate = new Date(GetDropdownEndDate(filter)).toISOString();
 
-            // Calculate the end date based on the selected filter
-            var currentDate = new Date();
-            switch (filter) {
-                case 'today':
-                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-                    break;
-                case 'week':
-                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7 - currentDate.getDay()));
-                    break;
-                case 'nextWeek':
-                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (14 - currentDate.getDay()));
-                    break;
-                case 'month':
-                    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-                    break;
-            }
-
-            console.log('End Date:', endDate);
+            $.ajax({
+                url: '/TeamLead/KanbanBoardPartial',
+                method: 'GET',
+                data: {
+                    search: $('#kanban-search-input').val().toLowerCase(),
+                    endDate: endDate
+                },
+                success: function (response) {
+                    $("#kanban-wrapper").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
         });
     });
 
-    // *********** ***************
+    function GetDropdownEndDate(filter){
+        var endDate;
+        // Calculate the end date based on the selected filter
+        var currentDate = new Date();
+        switch (filter) {
+            case 'today':
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+                break;
+            case 'week':
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7 - currentDate.getDay()));
+                break;
+            case 'nextWeek':
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (14 - currentDate.getDay()));
+                break;
+            case 'month':
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                break;
+        }
+        return endDate;
+    }
+
+    // ********************************* DROPDOWN SCRIPT ***************
     // Get the dropdown button and dropdown menu
     var dropdownButton = document.getElementById("assignedToDropdown");
     var dropdownMenu = dropdownButton.nextElementSibling;

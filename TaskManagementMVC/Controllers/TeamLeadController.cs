@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using TaskManagementMVC.Entities.ViewModels.Common;
 using TaskManagementMVC.Services.IServices;
 
@@ -42,10 +44,10 @@ public class TeamLeadController : Controller
     }
 
     [HttpGet("KanbanBoardPartial")]
-    public PartialViewResult KanbanBoardPartial()
+    public PartialViewResult KanbanBoardPartial([FromQuery]string search=null, [FromQuery] DateTime? endDate=null)
     {
         long TeamId = _Service.GetTeamIdFromUserId(long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId")));
-        KanbanViewModel kanbanViewModel = _Service.GetTeamLeadKanban(TeamId);
+        KanbanViewModel kanbanViewModel = _Service.GetTeamLeadKanban(TeamId,search, endDate);
         return PartialView("_KanbanBoardPartial", kanbanViewModel);
     }
 
@@ -57,6 +59,7 @@ public class TeamLeadController : Controller
     [HttpPost]
     public void ChangeTaskStatus(long taskId, int stateId)
     {
-        _Service.ChangeTaskStatus(taskId, stateId);
+        var userId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+        _Service.ChangeTaskStatus(taskId, stateId, userId);
     }
 }
