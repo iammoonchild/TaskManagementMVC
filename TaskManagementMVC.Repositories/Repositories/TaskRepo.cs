@@ -31,9 +31,20 @@ namespace TaskManagementMVC.Repositories.Repositories
             _context.SaveChanges();
         }
 
+        public Entities.Models.Task GetTaskFromTaskId(long taskId)
+        {
+            return _context.Tasks.FirstOrDefault(x => x.TaskId == taskId);
+        }
+
         public IQueryable<Entities.Models.Task> GetTeamTasksFromTeamId(long teamId)
         {
             return _context.Tasks.Include(x => x.AssignedTo).Where(x => x.AssignedTo.TeamId == teamId);
+        }
+
+        public void UpdateTask(Entities.Models.Task task)
+        {
+            _context.Tasks.Update(task);
+            _context.SaveChanges();
         }
     }
 }

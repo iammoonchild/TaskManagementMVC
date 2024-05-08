@@ -12,6 +12,8 @@ namespace TaskManagementMVC.Repositories.IRepositories
     {
         Entities.Models.Task AddTask(Entities.Models.Task taskToAdd);
         void AddTaskLog(TaskLog taskLog);
+        Entities.Models.Task GetTaskFromTaskId(long taskId);
         IQueryable<Entities.Models.Task> GetTeamTasksFromTeamId(long teamId);
+        void UpdateTask(Entities.Models.Task task);
     }
 }

@@ -53,4 +53,10 @@ public class TeamLeadController : Controller
     {
         return PartialView("_TeamLeadDashboard");
     }
+
+    [HttpPost]
+    public void ChangeTaskStatus(long taskId, int stateId)
+    {
+        _Service.ChangeTaskStatus(taskId, stateId);
+    }
 }

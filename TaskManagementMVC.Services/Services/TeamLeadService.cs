@@ -63,6 +63,13 @@ public class TeamLeadService : ITeamLeadService
         };
     }
 
+    public void ChangeTaskStatus(long taskId, int statusId)
+    {
+        Entities.Models.Task task = _TaskRepo.GetTaskFromTaskId(taskId);
+        task.TaskStateId = statusId;
+        _TaskRepo.UpdateTask(task);
+    }
+
     public long GetTeamIdFromUserId(long UserId)
     {
         return _Repo.GetTeamIdFromUserId(UserId);

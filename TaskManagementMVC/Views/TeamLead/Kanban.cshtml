@@ -130,27 +130,6 @@
 
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 <script>
-    // Function to handle scroll event
-    function handleScroll() {
-        var kanbanWrapper = document.getElementById("kanban-wrapper");
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        // Get the offset position of the kanban wrapper
-        var offsetTop = kanbanWrapper.offsetTop;
-
-        // Check if the scroll position is greater than or equal to the offset position
-        if (scrollTop >= offsetTop) {
-            // Add a class to the kanban wrapper to change its positioning
-            kanbanWrapper.classList.add("sticky");
-        } else {
-            // Remove the class if the scroll position is above the offset position
-            kanbanWrapper.classList.remove("sticky");
-        }
-    }
-
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll);
-
 
     //to add new task submit form
     document.getElementById("addTaskForm").addEventListener("submit", function (event) {

@@ -9,6 +9,7 @@ namespace TaskManagementMVC.Services.IServices;
 public interface ITeamLeadService
 {
     TaskCardViewModel AddNewTask(TaskCardViewModel model, long currentUserId);
+    void ChangeTaskStatus(long taskId, int statusId);
     long GetTeamIdFromUserId(long UserId);
     KanbanViewModel GetTeamLeadKanban(long teamId);
     List<Entities.ViewModels.Common.TaskCardViewModel> GetTeamTasksFromTeamId(long teamId);
