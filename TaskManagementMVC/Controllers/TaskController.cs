@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskManagementMVC.Entities.ViewModels.TasksViewModels;
 using TaskManagementMVC.Services.IServices;
 
 namespace TaskManagementMVC.Controllers
@@ -18,11 +19,19 @@ namespace TaskManagementMVC.Controllers
             return View();
         }
 
-        [HttpGet("{taskId}")]
+        [HttpGet("TaskDetails/{taskId}")]
         public IActionResult TaskDetails([FromRoute] long taskId)
         {
+            TaskDetailsViewModel model = _Service.GetTaskDetails(taskId);
+            return View(model);
+        }
 
-            return View();
+        [HttpPost("TaskDetails/{taskId}")]
+        public IActionResult TaskDetails([FromRoute] long taskId,TaskDetailsViewModel model)
+        {
+            var userId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            _Service.UpdateTask(taskId,model,userId);
+            return View(model);
         }
 
         [HttpPost("SaveComment")]

@@ -6,60 +6,68 @@
 
 <div class="container mt-5">
     <div class="row my-3 justify-content-end">
-        <button class="btn btn-primary">Back</button>
+        <button class="btn btn-primary col-2"><i class="bi bi-arrow-left me-3"></i> Back</button>
     </div>
     <div class="row">
         <h2>Task Details</h2>
         <hr>
-        <div class="col-md-6 mb-3">
-            <label for="taskTitle" class="form-label">Task Title</label>
-            <input type="text" asp-for="Title" class="form-control" id="taskTitle" value="Task Title">
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="taskStatus" class="form-label">Status</label>
-            <input type="text" asp-for="Status" class="form-control" id="taskStatus" value="Pending" readonly>
-            <span asp-validation-for="Status" class="text-danger"></span>
-        </div>
-        <div class="col-md-12 mb-3">
-            <label for="taskDescription" class="form-label">Description</label>
-            <textarea class="form-control" asp-for="Description" id="taskDescription" rows="4">Description of the task</textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="taskType" class="form-label">Type</label>
-            <input type="text" asp-for="Type" class="form-control" id="taskType" value="Bug" readonly>
-            <span asp-validation-for="Type" class="text-danger"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="assignedTo" class="form-label">Assigned To</label>
-            <div class="d-flex align-items-center">
-                @if(Model.Avatar!=null)
-                {
-                    <img src="@Model.Avatar" alt="Avatar" class="rounded-circle me-2"
-                     style="width: 30px; height: 30px;">
-                }
-                else
-                {
-                    <img src="~/images/memberavatar.png" alt="Avatar" class="rounded-circle me-2"
-                     style="width: 30px; height: 30px;">
-                }
-                <span>@Model.AssignedTo</span>
+        <form class="row" method="post" asp-action="TaskDetails" asp-controller="Task">
+            <input id="Id" type="text" hidden asp-for="Id" />
+            <div class="col-md-6 mb-3">
+                <label for="taskTitle" class="form-label">Task Title</label>
+                <input type="text" asp-for="Title" class="form-control" id="taskTitle">
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="createdDate" class="form-label">Created Date</label>
-            <input type="text" asp-for="CreatedDate" class="form-control" id="createdDate" value="2024-04-29" readonly>
-            <span asp-validation-for="CreatedDate" class="text-danger"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="deadline" class="form-label">Deadline</label>
-            <input type="text" asp-for="Deadline" class="form-control" id="deadline" value="2024-05-05" readonly>
-            <span asp-validation-for="Deadline" class="text-danger"></span>
-        </div>
-        <div class="col-12 text-end">
-            <button class="text-dark btn btn-warning">Save Changes</button>
-        </div>
+            <div class="col-md-6 mb-3">
+                <label for="taskStatus" class="form-label">Status</label>
+                <input type="text" asp-for="Status" class="form-control" id="taskStatus" readonly>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="taskDescription" class="form-label">Description</label>
+                <textarea class="form-control" asp-for="Description" id="taskDescription" rows="4">Description of the task</textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="taskType" class="form-label">Type</label>
+                <input type="text" asp-for="Type" class="form-control" id="taskType" readonly>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="assignedTo" class="form-label">Assigned To</label>
+                <div class="d-flex align-items-center">
+                    @if (Model.Avatar != null)
+                    {
+                        <img src="@Model.Avatar" alt="Avatar" class="rounded-circle me-2"
+                             style="width: 30px; height: 30px;">
+                    }
+                    else
+                    {
+                        <img src="~/images/memberavatar.png" alt="Avatar" class="rounded-circle me-2"
+                             style="width: 30px; height: 30px;">
+                    }
+                    <span>@Model.AssignedTo</span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="assignedBy" class="form-label">Assigned By</label>
+                <input type="text" asp-for="AssignedBy" class="form-control" id="assignedBy" readonly>
+                <span asp-validation-for="AssignedBy" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="createdBy" class="form-label">Created By</label>
+                <input type="text" asp-for="CreatedBy" class="form-control" id="createdBy" readonly>
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="deadline" class="form-label">Deadline</label>
+                <input type="text" asp-for="Deadline" class="form-control" id="deadline" readonly>
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="text-dark btn btn-warning">Save Changes</button>
+            </div>
+        </form>
     </div>
 
 
@@ -85,7 +93,7 @@
 </div>
 
 @section Scripts
-{
+    {
     <script>
         function SaveComment() {
             var comment = document.getElementById("comment").value;

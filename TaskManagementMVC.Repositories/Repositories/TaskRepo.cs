@@ -33,7 +33,7 @@ namespace TaskManagementMVC.Repositories.Repositories
 
         public Entities.Models.Task GetTaskFromTaskId(long taskId)
         {
-            return _context.Tasks.FirstOrDefault(x => x.TaskId == taskId);
+            return _context.Tasks.Include(x => x.TaskLogs).Include(x => x.AssignedBy).Include(x => x.AssignedTo).Include(x=> x.CreatedBy).FirstOrDefault(x => x.TaskId == taskId);
         }
 
         public IQueryable<Entities.Models.Task> GetTeamTasksFromTeamId(long teamId)

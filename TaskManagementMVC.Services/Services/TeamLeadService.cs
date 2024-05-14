@@ -45,7 +45,6 @@ public class TeamLeadService : ITeamLeadService
             TaskId = task.TaskId,
             LogTypeId = (short)TaskLogTypeEnum.Created,
             LogDescription = $"Task created By {user.Name} on {DateTime.Now}",
-            CommentedById = currentUserId
         };
         _TaskRepo.AddTaskLog(taskLog);
 
@@ -74,7 +73,7 @@ public class TeamLeadService : ITeamLeadService
         {
             TaskId = taskId,
             LogTypeId = (short)TaskLogTypeEnum.StateChanged,
-            LogDescription = $"Task state changed from {((TaskStateEnum)oldState).ToString()} to {((TaskStateEnum)statusId).ToString()} by {user.Name}",
+            LogDescription = $"Task state changed from {((TaskStateEnum)oldState).ToString()} to {((TaskStateEnum)statusId).ToString()} by {user.Name} on {DateTime.Now}",
             CommentedById = user.Id
         };
         _TaskRepo.AddTaskLog(taskLog);

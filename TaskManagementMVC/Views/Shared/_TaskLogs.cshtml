@@ -6,7 +6,7 @@
     @foreach (var log in Model)
     {
         <li class="list-group-item">
-            <div><strong>@log.Keys.First():</strong> @log.Values.First()</div>
+            <div><strong hidden>@log.Keys.First():</strong> @log.Values.First()</div>
         </li>
     }
 </ul>

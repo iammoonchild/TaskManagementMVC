@@ -74,7 +74,7 @@
         taskCard.draggable = true;
         taskCard.dataset.task = JSON.stringify(task);
         taskCard.innerHTML = `
-                                            <div class="card-header text-uppercase" data-taskid=${task.id}>${task.title}</div>
+                                                <div class="card-header text-uppercase" data-taskid=${task.id} (click)="goToTaskDetails(${task.id})">${task.title}</div>
                                             <div class="card-body">
                                                 <p class="card-text">${task.description}</p>
                                             </div>
@@ -89,6 +89,9 @@
                                             </div>
                                         `;
         taskCard.addEventListener('dragstart', handleDragStart);
+        taskCard.addEventListener('click', function () {
+            goToTaskDetails(task.id);
+        });
         column.appendChild(taskCard);
         //animation to show card is added
         taskCard.style.transform = "translateY(100%)";
@@ -171,6 +174,11 @@
                 });
             }
         }
+    }
+
+    function goToTaskDetails(taskId){
+        console.log("Task Id: ", taskId);
+        window.location.href = '@Url.Action("TaskDetails", "Task")/' + taskId;
     }
 
 </script>

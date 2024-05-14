@@ -32,6 +32,7 @@ public class TaskUtilities
         DescriptionChanged = 5,
         TitleChanged = 6,
         Deleted = 7,
-        Commented = 8
+        Commented = 8,
+        Updated = 9
     }
 }
