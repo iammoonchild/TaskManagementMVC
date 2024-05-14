@@ -1,4 +1,6 @@
-﻿@{
+﻿@using TaskManagementMVC.Entities.ViewModels.TeamLead;
+@model TLDashboardViewModel
+@{
     ViewData["Title"] = "PTM | Dashboard";
     ViewBag.Title = "PTM | Dashboard";
     ViewBag.UserName = "First Last";
@@ -7,6 +9,6 @@
     @*<partial name="~/Views/Shared/_TeamLeadDashboard.cshtml" />*@
     @if (true)
     {
-        Html.RenderPartial("~/Views/Shared/_TeamLeadDashboard.cshtml");
+        Html.RenderPartial("~/Views/Shared/_TeamLeadDashboard.cshtml",Model);
     }
 </div>

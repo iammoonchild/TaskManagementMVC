@@ -31,13 +31,16 @@ namespace TaskManagementMVC.Controllers
         {
             var userId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
             _Service.UpdateTask(taskId,model,userId);
-            return View(model);
+            return RedirectToAction("TaskDetails",taskId);
         }
 
         [HttpPost("SaveComment")]
         public PartialViewResult SaveComment(string comment,long taskId)
         {
-            return PartialView("_TaskLogs");
+            var userId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            _Service.SaveComment(comment,taskId,userId);
+            List<Dictionary<long, string>> comments = _Service.GetComments(taskId);
+            return PartialView("_TaskLogs", comments);
         }
     }
 }

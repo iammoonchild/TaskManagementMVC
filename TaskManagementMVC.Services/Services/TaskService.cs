@@ -21,6 +21,18 @@ namespace TaskManagementMVC.Services.Services
             _userRepo = userRepo;
         }
 
+        public List<Dictionary<long, string>> GetComments(long taskId)
+        {
+            var task = _taskRepo.GetTaskFromTaskId(taskId);
+            List<Dictionary<long, string>> comments = new List<Dictionary<long, string>>();
+            foreach (var comment in task.TaskLogs.Where(x => x.CommentedById != null).OrderByDescending(x => x.CreatedDate))
+            {
+                var com = $"{comment.LogDescription}";
+                comments.Add(new Dictionary<long, string> { { comment.LogId, com } });
+            }
+            return comments;
+        }
+
         public TaskDetailsViewModel GetTaskDetails(long taskId)
         {
             var task = _taskRepo.GetTaskFromTaskId(taskId);
@@ -40,7 +52,7 @@ namespace TaskManagementMVC.Services.Services
                 Comment = "",
                 Comments = new List<Dictionary<long, string>>()
             };
-            foreach (var log in task.TaskLogs)
+            foreach (var log in task.TaskLogs.OrderByDescending(x => x.CreatedDate))
             {
                 Dictionary<long, string> logDict = new Dictionary<long, string>
                 {
@@ -48,12 +60,25 @@ namespace TaskManagementMVC.Services.Services
                 };
                 model.Logs.Add(logDict);
             }
-            foreach (var comment in task.TaskLogs.Where(x => x.CommentedById != null))
+            foreach (var comment in task.TaskLogs.Where(x => x.CommentedById != null).OrderByDescending(x => x.CreatedDate))
             {
                 var com = $"{comment.LogDescription} by {comment.CommentedBy.Name} on {comment.CreatedDate}\n";
                 model.Comments.Add(new Dictionary<long, string> { { comment.LogId, com } });
             }
             return model;
+        }
+
+        public void SaveComment(string com, long taskId, long userId)
+        {
+            var user = _userRepo.GetUserFromUserId(userId);
+            TaskLog comment = new TaskLog
+            {
+                TaskId = taskId,
+                LogDescription = $"{user.Name} Commented : {com} on {DateTime.Now}",
+                LogTypeId = (int)TaskLogTypeEnum.Commented,
+                CommentedById = userId
+            };
+            _taskRepo.AddTaskLog(comment);
         }
 
         public void UpdateTask(long taskId, TaskDetailsViewModel model, long userId)
@@ -62,9 +87,9 @@ namespace TaskManagementMVC.Services.Services
             Entities.Models.Task task = _taskRepo.GetTaskFromTaskId(taskId);
             Entities.Models.Task taskForLog = task;
 
-            bool isTitleUpdated = task.TaskTitle != taskForLog.TaskTitle;
-            bool isDescriptionUpdated = task.TaskDescription != taskForLog.TaskDescription;
-            bool isDeadlineUpdated = task.Deadline != taskForLog.Deadline;
+            bool isTitleUpdated = model.Title != taskForLog.TaskTitle;
+            bool isDescriptionUpdated = model.Description != taskForLog.TaskDescription;
+            bool isDeadlineUpdated = model.Deadline != taskForLog.Deadline;
 
             task.TaskTitle = model.Title;
             task.TaskDescription = model.Description;

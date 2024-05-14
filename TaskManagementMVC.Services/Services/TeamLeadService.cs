@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagementMVC.Entities.Models;
 using TaskManagementMVC.Entities.ViewModels.Common;
+using TaskManagementMVC.Entities.ViewModels.TeamLead;
 using TaskManagementMVC.Repositories.Enums;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Services.IServices;
@@ -82,6 +83,27 @@ public class TeamLeadService : ITeamLeadService
     public long GetTeamIdFromUserId(long UserId)
     {
         return _Repo.GetTeamIdFromUserId(UserId);
+    }
+
+    public TLDashboardViewModel GetTeamLeadDashboard(long v)
+    {
+        AspNetUser user = _UserRepo.GetUserFromUserId(v);
+        IQueryable<Entities.Models.Task> tasks = _TaskRepo.GetTeamTasksFromTeamId(user.TeamId ?? 1);
+
+        TLDashboardViewModel model = new TLDashboardViewModel();
+        model.PendingTask = tasks.Where(x => x.TaskStateId <= (short)TaskStateEnum.Pending).Count();
+        model.InProgressTask = tasks.Where(x => x.TaskStateId == (short)TaskStateEnum.InProgress).Count();
+        model.CompletedTask = tasks.Where(x => x.TaskStateId == (short)TaskStateEnum.Completed).Count();
+        model.TaskCompletionRate = tasks.Count() > 0 ? ((model.CompletedTask * 100) / tasks.Count()) : 100;
+        model.ManagerInstructions = new ();
+        model.TeamMembers = _UserRepo.GetTeamUsersFromTeamId(user.TeamId ?? 1).Select(x => new DashboardTeamMembersViewModel
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Avatar = x.Avatar,
+            PendingTask = tasks.Where(y => y.AssignedToId == x.Id && y.TaskStateId <= (short)TaskStateEnum.Pending).Count()
+        }).ToList();
+        return model;
     }
 
     public KanbanViewModel GetTeamLeadKanban(long teamId, string search=null, DateTime? dt=null)

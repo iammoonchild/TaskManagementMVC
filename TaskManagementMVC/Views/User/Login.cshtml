@@ -11,6 +11,10 @@
 {
     Html.RenderPartial("_ToastFailure", TempData["LoginFailed"]);
 }
+@if (TempData["PasswordReset"] != null)
+{
+    Html.RenderPartial("_ToastSuccess", TempData["PasswordReset"]);
+}
 @if (TempData["ResetPassword"] != null)
 {
     Html.RenderPartial("_ToastSuccess", TempData["ResetPassword"]);

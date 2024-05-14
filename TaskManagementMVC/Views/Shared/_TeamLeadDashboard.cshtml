@@ -1,4 +1,6 @@
-﻿<div class="container mt-5">
+﻿@using TaskManagementMVC.Entities.ViewModels.TeamLead;
+@model TLDashboardViewModel
+<div class="container mt-5">
     <div class="row justify-content-between ">
         <div class="col-md-6">
             <!-- Left upper section with  -->
@@ -6,7 +8,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Task Completion Rate</h5>
                     <!--  chart -->
-                    <div id="-wrapper" style="display: flex; justify-content: center;">
+                    <div id="chart-wrapper" style="display: flex; justify-content: center;">
                         <canvas id="speedometer" width="300" height="300"></canvas>
                     </div>
                 </div>
@@ -25,47 +27,34 @@
     </div>
     <div class="row mt-4">
         <div class="col-md-6">
-            <!-- Left lower section with user cards -->
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">Team Members</h5>
-                    <!-- User cards -->
                     <div class="d-flex justify-content-start flex-wrap">
-                        <!-- User card with task count -->
-                        <div class="user-wrapper d-flex flex-column justify-content-center">
-                            <div class="user-card mb-0">
-                                <img src="~/images/memberavatar.png" alt="User 1">
-                                <div class="task-count">5 tasks pending</div>
-                            </div>
-                            <div class="user-name text-center mt-0">
-                                <span>Harimati Ghoghari</span>
-                            </div>
-                        </div>
-                        <div class="user-wrapper d-flex flex-column justify-content-center">
-                            <div class="user-card mb-0">
-                                <img src="~/images/memberavatar.png" alt="User 1">
-                                <div class="task-count">8 tasks pending</div>
-                            </div>
-                            <div class="user-name text-center mt-0">
-                                <span>Harimati Ghoghari</span>
-                            </div>
-                        </div>
-                        <div class="user-wrapper d-flex flex-column justify-content-center">
-                            <div class="user-card mb-0">
-                                <img src="~/images/memberavatar.png" alt="User 1">
-                                <div class="task-count">10 tasks pending</div>
-                            </div>
-                            <div class="user-name text-center mt-0">
-                                <span>Harimati Ghoghari</span>
-                            </div>
-                        </div>
-                        <!-- Add more user cards as needed -->
+                        @foreach (var member in Model.TeamMembers)
+                        {
+                            <div class="user-wrapper d-flex flex-column justify-content-center" id="user-@member.Id">
+                                <div class="user-card mb-0">
+                                    @if (member.Avatar != null)
+                                    {
+                                        <img src="@member.Avatar" alt="User Avatar">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/memberavatar.png" alt="User Avatar">
+                                    }
+                                    <div class="task-count">@member.PendingTask tasks pending</div>
+                                </div>
+                                <div class="user-name text-center mt-0">
+                                    <span>@member.Name</span>
+                                </div>
+                            </div>            
+                        }
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <!-- Right lower section with additional content -->
             <div class="card h-100">
                 <h5 class="card-title ps-2 pt-3 mb-2">Project Manager Instructions</h5>
                 <div class="card-body" id="instructionBoard">
@@ -85,11 +74,14 @@
 
 <script>
     // Dummy data for the task status chart
+   var pendingTasks = @Html.Raw(Model.PendingTask);
+var inProgressTasks = @Html.Raw(Model.InProgressTask);
+var completedTasks = @Html.Raw(Model.CompletedTask);
     var taskStatusData = {
         labels: ['Pending', 'In Progress', 'Completed'],
         datasets: [{
             label: 'Task Status',
-            data: [20, 30, 50], // Example data (replace with actual data)
+            data: [pendingTasks, inProgressTasks, completedTasks], // Example data (replace with actual data)
             backgroundColor: [
                 'rgba(255, 99, 132, 0.5)',
                 'rgba(54, 162, 235, 0.5)',
@@ -121,13 +113,11 @@
 
     var canvas = document.getElementById('speedometer');
     var ctx = canvas.getContext('2d');
-    var percent = 25; // Example completion percentage
+    var percent = @Html.Raw(Model.TaskCompletionRate); // Completion percentage
 
     var centerX = canvas.width / 2;
     var centerY = canvas.height / 2;
     var radius = canvas.width / 3;
-
-    var percent = 75; // Example completion percentage
 
     function draw(percent) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

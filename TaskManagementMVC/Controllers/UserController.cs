@@ -115,7 +115,8 @@ namespace TaskManagementMVC.Controllers
             model.Passwords.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(pwdModel.Password, HashType.SHA512);
             model.Email = _httpContextAccessor.HttpContext.Session.GetString("Email");
             _userServices.ResetPassword(model);
-            return View();
+            TempData["PasswordReset"] = "Password Reset Successfully";
+            return RedirectToAction("Login");
         }
     }
 }

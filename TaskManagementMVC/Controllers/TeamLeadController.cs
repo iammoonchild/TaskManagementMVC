@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using TaskManagementMVC.Entities.ViewModels.Common;
+using TaskManagementMVC.Entities.ViewModels.TeamLead;
 using TaskManagementMVC.Services.IServices;
 
 namespace TaskManagementMVC.Controllers;
@@ -23,8 +24,8 @@ public class TeamLeadController : Controller
     [HttpGet("Dashboard")]
     public IActionResult Dashboard()
     {
-        var model = new { };
-        return View();
+        TLDashboardViewModel model = _Service.GetTeamLeadDashboard(long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId")));
+        return View(model);
     }
 
     [HttpGet("Kanban")]
@@ -50,10 +51,11 @@ public class TeamLeadController : Controller
         KanbanViewModel kanbanViewModel = _Service.GetTeamLeadKanban(TeamId,search, endDate);
         return PartialView("_KanbanBoardPartial", kanbanViewModel);
     }
-
+    [HttpGet("TeamLeadDashboard")]
     public PartialViewResult TeamLeadDashboard()
     {
-        return PartialView("_TeamLeadDashboard");
+        TLDashboardViewModel model = _Service.GetTeamLeadDashboard(long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId")));
+        return PartialView("_TeamLeadDashboard", model);
     }
 
     [HttpPost]
