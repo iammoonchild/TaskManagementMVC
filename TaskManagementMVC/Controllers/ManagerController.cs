@@ -11,6 +11,7 @@ using TaskManagementMVC.Entities.Models;
 
 namespace TaskManagementMVC.Controllers
 {
+    [CustomAuthorize("Manager")]
     [Route("Manager")]
     public class ManagerController : Controller
     {
@@ -32,8 +33,8 @@ namespace TaskManagementMVC.Controllers
         {
             return View();
         }
-
-        [CustomAuthorize("Manager")]
+        [HttpGet("CreateTeam")]
+        
         public IActionResult CreateTeam()
         {
             var ManagerId = 6;

@@ -21,6 +21,26 @@
            color: black !important;
        }
    </style>
+
+    <style>
+        .navbar-nav .nav-item.active .nav-link {
+            background-color: rgba(255, 255, 255, 0.2); /* Background color */
+            border-radius: 5px; /* Border radius */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+            .navbar-nav .nav-item.active .nav-link:hover {
+                background-color: rgba(255, 255, 255, 0.3); /* Hover background color */
+            }
+
+            .navbar-nav .nav-item.active .nav-link .bi {
+                color: #fff; /* Icon color */
+            }
+
+            .navbar-nav .nav-item.active .nav-link span {
+                color: #fff; /* Text color */
+            }
+    </style>
 </head>
 <body>
     <div id="overlay" class="overlay">
@@ -75,7 +95,7 @@
     </header>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    @* <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid ms-3">
             <!-- Navbar toggler -->
             <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -121,8 +141,64 @@
                 </ul>
             </div>
         </div>
+    </nav> *@
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+           
+            <!-- Toggler button for mobile view -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard" onclick="setActiveNavItem(3)">
+                            <i class="bi bi-house-door me-2"></i>
+                            <span class="d-lg-inline-block text-white">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="myteams" onclick="setActiveNavItem(4)">
+                            <i class="bi bi-people me-2"></i>
+                            <span class="d-lg-inline-block text-white">My Teams</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="calendar" onclick="setActiveNavItem(5)">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            <span class="d-lg-inline-block text-white">My Calendar</span>
+                        </a>
+                    </li>
+                    <!-- Add more navbar items as needed -->
+                </ul>
+                <!-- Notification and profile icons for mobile view -->
+                <ul class="navbar-nav ms-auto d-lg-none">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-bell me-2"></i>
+                            <span>Notifications</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="~/images/memberavatar.png" alt="Profile" width="30" class="rounded-circle me-2">
+                            <span>User Name</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
+
+    <div class="container mt-2">
+        <div class="row my-3 justify-content-end">
+            <button class="btn btn-primary col-1" onclick="window.history.back()"><i class="bi bi-arrow-left me-3"></i> Back</button>
+        </div>
+    </div>
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -142,5 +218,43 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Function to handle navigation item clicks
+        function navigateToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+    <script>
+        // Function to set the active item in the navbar
+        function setActiveNavItem(index) {
+            // Remove active class from all nav links
+            
+            console.log(index + " this is serActiveNavItem")
+            localStorage.setItem('activeNavItemIndex', index);
+        }
+
+        function setActiveNavItemOnLoad() {
+            var activeNavItemIndex = localStorage.getItem('activeNavItemIndex');
+            var index = parseInt(activeNavItemIndex);
+            console.log(parseInt(activeNavItemIndex) + " this is serActiveNavItemOnLoad")
+            if (activeNavItemIndex !== null) {
+                setActiveNavItem(parseInt(activeNavItemIndex));
+            }
+
+            var navLinks = document.querySelectorAll('.nav-link');
+            for (var i = 0; i < navLinks.length; i++) {
+                navLinks[i].className = navLinks[i].className.replace(/\bactive\b/g, '');
+            }
+
+            // Add active class to the clicked nav link based on the index
+            var clickedNavLink = document.querySelectorAll('.nav-link')[index];
+            clickedNavLink.className += ' active';
+        }
+
+        // Call the setActiveNavItemOnLoad function when the page loads
+        window.onload = setActiveNavItemOnLoad;
+    </script>
+
 </body>
 </html>
