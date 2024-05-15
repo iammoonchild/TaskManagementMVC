@@ -46,6 +46,16 @@ namespace TaskManagementMVC.Services.Services
             return _managerRepo.GetTeamMembersData(ManagerId);
         }
 
+        public List<AspNetUser> GetTeamMembersDataForCalendar(long pMId, int TeamId)
+        {
+            return _managerRepo.GetTeamMembersDataForCalendar(pMId).Where(x => TeamId == 0 ||  x.TeamId == TeamId).ToList();
+        }
+
+        public List<AspNetUser> GetTeamsForCalendar(long pMId)
+        {
+            return _managerRepo.GetTeamsForCalendar(pMId).ToList();
+        }
+
         public TeamWorkDetailsViewModel GetTeamWorkDetails(int teamId)
         {
             IQueryable<AspNetUser> model = _managerRepo.GetTeamWorkDetails(teamId);

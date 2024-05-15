@@ -6,6 +6,8 @@ using TaskManagementMVC.Authorization;
 using TaskManagementMVC.Entities.ViewModels.Manager;
 using System.Security.Claims;
 using System.Text;
+using System.Collections.Generic;
+using TaskManagementMVC.Entities.Models;
 
 namespace TaskManagementMVC.Controllers
 {
@@ -65,8 +67,55 @@ namespace TaskManagementMVC.Controllers
             TeamWorkDetailsViewModel model = _managerService.GetTeamWorkDetails(teamId);
             return View(model);
         }
-        
 
+        [HttpGet("Calendar")]
+        public IActionResult Calendar()
+        {
+            return View();
+        }
+
+        [HttpGet("GetTeamMembersData")]
+        public IActionResult GetTeamMembersData(int TeamId)
+        {
+            var PMId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            var data = _managerService.GetTeamMembersDataForCalendar(PMId, TeamId);
+            List<CalendarDataViewModel> list = data.Select(x => new CalendarDataViewModel
+            {
+                Id = x.Id,
+                title = x.Name,
+            }).ToList();
+            return Json(list);
+        }
+
+        [HttpGet("GetTaskData")]
+        public IActionResult GetTaskData(int TeamId)
+        {
+            var PMId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            var data = _managerService.GetTeamMembersDataForCalendar(PMId, TeamId);
+            var startTime = new TimeOnly(9, 0, 0);
+            var endTime = new TimeOnly(18, 0, 0);
+            
+
+            List<CalendarTaskViewModel> list = data.SelectMany(x => x.TaskAssignedTos.Select(taskAssignedTo => new CalendarTaskViewModel
+            {
+                resourceId = x.Id,
+                Id = taskAssignedTo.TaskId,
+                title = taskAssignedTo.TaskTitle,
+                start = taskAssignedTo.Deadline.ToDateTime(startTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = taskAssignedTo.Deadline.ToDateTime(endTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                color = taskAssignedTo.TaskStateId == 1 ? "#FF0000" : taskAssignedTo.TaskStateId == 2 ? "#FFA500" : "#008000"
+            })).ToList();
+
+            return Json(list);
+        }
+
+        [HttpGet("GetTeams")]
+        public IActionResult GetTeams()
+        {
+            var PMId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
+            var list = _managerService.GetTeamsForCalendar(PMId).ToList();
+            return Json(list);
+        }
 
     }
 

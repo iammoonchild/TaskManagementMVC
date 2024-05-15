@@ -1,0 +1,88 @@
+﻿<div class="container-sm container-fluid">
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <h3 class="fw-semibold">Scheduling</h3>
+        <a class="btn btn-outline-info" onclick="window.history.back();"><i class="bi bi-chevron-left btn-outline-info "></i> Back</a>
+    </div>
+
+    <div class="shadow border-top mt-1 p-3">
+
+        <div class="d-sm-flex justify-content-between align-items-center">
+
+            <div class="w-25 d-flex align-items-center">
+
+                <div class="mb-2 mt-2 bg-white border border-end-0 pt-2 pb-1 ps-2">
+                    <i class="fas fa-search "></i>
+                </div>
+                <select class="form-select Change2  border rounded-2 border-start-0 form-control " id="SelectedTeam"
+                        name="SelectedTeam">
+                        @* asp-for="SelectedMember" *@
+                     <option selected>All Teams</option>
+                   @* @for (int x = 0; x < Model.RegionList.Count; x++)
+                    {
+                        <option value="@Model.RegionList[x].RegionId">@Model.RegionList[x].Name</option>
+                    } *@
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-info text-white me-2" asp-controller="Admin" asp-action="provider_oncall"> Provider On Call</a>
+                <a class="btn btn-info text-white me-2" asp-controller="Admin" asp-action="requested_shifts"> Shifts For Review</a>
+                <a class="btn btn-info text-white me-2" data-bs-toggle="modal" data-bs-target="#CreateShiftModal"> Add New Shifts</a>
+            </div>
+
+        </div>
+        <div>
+            <div class="d-flex justify-content-between flex-wrap mt-3 mb-3">
+                <div>
+                    <h5 id="calendarTitle"></h5>
+                </div>
+                <div class="flex-grow-1 text-end">
+                    <div class="d-flex justify-content-end">
+                        <div class="align-items-center d-flex me-3">
+                            <span class="border rounded-2 border-danger d-inline-block me-2" style="width:50px; height:30px; background-color:#edacd2 !important"></span>
+                            <span>Pending Shift</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                            <span class="border rounded-2 border-success d-inline-block me-2" style="width:50px; height:30px; background-color:#a5cfa6 !important"></span>
+                            <span>Approved Shift</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="d-flex justify-content-between flex-wrap mt-3 mb-3">
+                <div class="d-flex">
+                    <button class="btn bg-info text-white rounded-pill me-2" onclick="calendarPrev()"><i class="bi bi-chevron-left"></i></button>
+                    <i class="bi bi-calendar3 mt-2" onclick="calendarToday()" id="datePicker"></i>
+                    <button class="btn bg-info text-white rounded-pill ms-2"><i class="bi bi-chevron-right" onclick="calendarNext()"></i></button>
+                </div>
+                <div class="flex-grow-1 text-end">
+                    <div class="d-flex justify-content-end">
+                        <input type="radio" class="btn-check" name="options-base" id="Day" autocomplete="off"
+                               onclick="changeView('resourceTimeline')" checked>
+                        <label class="btn btn-outline-info" for="Day">Day</label>
+
+
+                        <input type="radio" class="btn-check" name="options-base" id="Week" autocomplete="off"
+                               onclick="changeView('resourceTimelineWeek')">
+                        <label class="btn btn-outline-info mx-2" for="Week">Week</label>
+
+
+                        <input type="radio" class="btn-check" name="options-base" id="Month" autocomplete="off"
+                               onclick="changeView('dayGridMonth')">
+                        <label class="btn btn-outline-info" for="Month">Month</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="calendar"></div>
+    </div>
+    <div id="ViewShift">
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js"></script>
+
+<script src="~/js/CalendarScript.js"></script>

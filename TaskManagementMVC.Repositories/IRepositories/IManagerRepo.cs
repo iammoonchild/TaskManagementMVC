@@ -11,7 +11,9 @@ namespace TaskManagementMVC.Repositories.IRepositories
     public interface IManagerRepo
     {
         TeamMembersViewModel GetTeamMembersData(int managerId);
+        IQueryable<AspNetUser> GetTeamMembersDataForCalendar(long pMId);
         IQueryable<Team> GetTeams(int managerId);
+        IQueryable<AspNetUser> GetTeamsForCalendar(long pMId);
         IQueryable<AspNetUser> GetTeamWorkDetails(int teamId);
         void SetTeamMembersData(TeamMembersViewModel viewModel,long PMId);
     }
