@@ -155,19 +155,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard" onclick="setActiveNavItem(3)">
+                        <a class="nav-link" href="@Url.Action("Dashboard", currentController)" onclick="setActiveNavItem(3)">
                             <i class="bi bi-house-door me-2"></i>
                             <span class="d-lg-inline-block text-white">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="myteams" onclick="setActiveNavItem(4)">
+                        <a class="nav-link" href="@Url.Action("MyTeams", currentController)" onclick="setActiveNavItem(4)">
                             <i class="bi bi-people me-2"></i>
                             <span class="d-lg-inline-block text-white">My Teams</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="calendar" onclick="setActiveNavItem(5)">
+                        <a class="nav-link" href="@Url.Action("Calendar", currentController)" onclick="setActiveNavItem(5)">
                             <i class="bi bi-calendar3 me-2"></i>
                             <span class="d-lg-inline-block text-white">My Calendar</span>
                         </a>
@@ -194,9 +194,9 @@
     </nav>
 
 
-    <div class="container mt-2">
+    <div class="container mt-2" id="backButtonDiv">
         <div class="row my-3 justify-content-end">
-            <button class="btn btn-primary col-1" onclick="window.history.back()"><i class="bi bi-arrow-left me-3"></i> Back</button>
+            <button class="btn btn-primary col-1"  onclick="window.history.back()"><i class="bi bi-arrow-left me-3"></i> Back</button>
         </div>
     </div>
     <div class="container-fluid">
@@ -226,6 +226,18 @@
         }
     </script>
     <script>
+        var checkDashboard = localStorage.getItem('Dashboard');
+        if (checkDashboard === 'Dashboard') {
+            $("#backButtonDiv").addClass('d-none');
+        }
+        else {
+            $("#backButtonDiv").removeClass('d-none');
+        }
+        var roleData = localStorage.getItem('RoleMember');
+        if (roleData === 'Member') {
+            var clickedNavLink = document.querySelectorAll('.nav-link')[5];
+            clickedNavLink.className += ' d-none';
+        }
         // Function to set the active item in the navbar
         function setActiveNavItem(index) {
             // Remove active class from all nav links
@@ -241,6 +253,9 @@
             if (activeNavItemIndex !== null) {
                 setActiveNavItem(parseInt(activeNavItemIndex));
             }
+            else {
+                setActiveNavItem(3);
+            }
 
             var navLinks = document.querySelectorAll('.nav-link');
             for (var i = 0; i < navLinks.length; i++) {
@@ -254,6 +269,11 @@
 
         // Call the setActiveNavItemOnLoad function when the page loads
         window.onload = setActiveNavItemOnLoad;
+
+        window.addEventListener('beforeunload', function () {
+            localStorage.removeItem('RoleMember');
+            localStorage.removeItem('Dashboard');
+        });
     </script>
 
 </body>

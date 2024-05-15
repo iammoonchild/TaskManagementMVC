@@ -171,6 +171,8 @@
 
     // ****************************  filter script *****************************************
     $(document).ready(function () {
+        localStorage.setItem('Dashboard', "Dashboard");
+        localStorage.setItem('RoleMember', "Member");
         $('#kanban-search-input').on('blur', function () {
             var value = $(this).val().toLowerCase();
             //find button who is having text as $('#filterDropdown').text and get the data-filter attribute value

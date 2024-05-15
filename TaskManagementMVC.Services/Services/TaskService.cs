@@ -62,7 +62,8 @@ namespace TaskManagementMVC.Services.Services
             }
             foreach (var comment in task.TaskLogs.Where(x => x.CommentedById != null).OrderByDescending(x => x.CreatedDate))
             {
-                var com = $"{comment.LogDescription} by {comment.CommentedBy.Name} on {comment.CreatedDate}\n";
+                //var com = $"{comment.LogDescription} by {comment.CommentedBy.Name} on {comment.CreatedDate}\n";
+                var com = comment.LogDescription;
                 model.Comments.Add(new Dictionary<long, string> { { comment.LogId, com } });
             }
             return model;
@@ -91,29 +92,32 @@ namespace TaskManagementMVC.Services.Services
             bool isDescriptionUpdated = model.Description != taskForLog.TaskDescription;
             bool isDeadlineUpdated = model.Deadline != taskForLog.Deadline;
 
-            task.TaskTitle = model.Title;
-            task.TaskDescription = model.Description;
-            task.Deadline = model.Deadline;
-            task.ModifiedBy = userId;
 
 
             if (isTitleUpdated || isDescriptionUpdated || isDeadlineUpdated)
             {
 
-                _taskRepo.UpdateTask(task);
+                
                 string logMessage = $"Task updated by {user.Name} as ";
                 if (isTitleUpdated)
                 {
-                    logMessage += $" Title updated from '{taskForLog.TaskTitle}' to '{task.TaskTitle}'.";
+                    logMessage += $" Title updated from '{taskForLog.TaskTitle}' to '{model.Title}'.";
                 }
                 if (isDescriptionUpdated)
                 {
-                    logMessage += $" Description updated from '{taskForLog.TaskDescription}' to '{task.TaskDescription}'.";
+                    logMessage += $" Description updated from '{taskForLog.TaskDescription}' to '{model.Description}'.";
                 }
                 if (isDeadlineUpdated)
                 {
-                    logMessage += $" Deadline updated from '{taskForLog.Deadline}' to '{task.Deadline}'.";
+                    logMessage += $" Deadline updated from '{taskForLog.Deadline}' to '{model.Deadline}'.";
                 }
+
+
+                task.TaskTitle = model.Title;
+                task.TaskDescription = model.Description;
+                task.Deadline = model.Deadline;
+                task.ModifiedBy = userId;
+                _taskRepo.UpdateTask(task);
 
                 TaskLog taskLog = new TaskLog
                 {

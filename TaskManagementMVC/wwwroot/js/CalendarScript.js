@@ -70,13 +70,13 @@ function GetCalendar(TeamId) {
                 slotLabelFormat: { weekday: 'short', day: 'numeric', week: 'long' }
             },
         },
-        resourceLabelDidMount: function (resourceObj) {
-            const img = document.createElement('img');
-            img.src = resourceObj.resource.extendedProps.imageUrl || "/images/doc-ico.png";
-            img.style.maxHeight = '40px';
-            img.style.margin = '2px';
-            resourceObj.el.querySelector('.fc-datagrid-cell-main').appendChild(img);
-        },
+        //resourceLabelDidMount: function (resourceObj) {
+        //    const img = document.createElement('img');
+        //    img.src = resourceObj.resource.extendedProps.imageUrl || "/images/doc-ico.png";
+        //    img.style.maxHeight = '40px';
+        //    img.style.margin = '2px';
+        //    resourceObj.el.querySelector('.fc-datagrid-cell-main').appendChild(img);
+        //},
         resources: "/Manager/GetTeamMembersData?TeamId=" + TeamId,
         events: "/Manager/GetTaskData?TeamId=" + TeamId,
     });

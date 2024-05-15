@@ -37,7 +37,7 @@ namespace TaskManagementMVC.Controllers
         
         public IActionResult CreateTeam()
         {
-            var ManagerId = 6;
+            var ManagerId = int.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId")); 
             TeamMembersViewModel model = _managerService.GetTeamMembersData(ManagerId);
             return View(model);
         }
