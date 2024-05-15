@@ -9,5 +9,6 @@ namespace TaskManagementMVC.Repositories.IRepositories;
 public interface ITeamLeadRepo
 {
     long GetTeamIdFromUserId(long UserId);
+    IEnumerable<AspNetUser> GetTeamMembersDataForCalendar(long tLId);
     IQueryable<AspNetUser> GetTeamUsersWithTasksFromTeamId(long teamId);
 }

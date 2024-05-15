@@ -8,6 +8,7 @@ using TaskManagementMVC.Entities.ViewModels.Common;
 using TaskManagementMVC.Entities.ViewModels.TeamLead;
 using TaskManagementMVC.Repositories.Enums;
 using TaskManagementMVC.Repositories.IRepositories;
+using TaskManagementMVC.Repositories.Repositories;
 using TaskManagementMVC.Services.IServices;
 using static TaskManagementMVC.Repositories.Enums.TaskUtilities;
 
@@ -151,6 +152,11 @@ public class TeamLeadService : ITeamLeadService
              }).ToList()
         };
         return kanban;
+    }
+
+    public List<AspNetUser> GetTeamMembersDataForCalendar(long tLId, int teamId)
+    {
+        return _Repo.GetTeamMembersDataForCalendar(tLId).ToList();
     }
 
     //ON HOLDDDDDDDDDDDDD

@@ -20,6 +20,12 @@ public class TeamLeadRepo : ITeamLeadRepo
        return _context.AspNetUsers.FirstOrDefault(x => x.Id == UserId).TeamId ?? 0;
     }
 
+    public IEnumerable<AspNetUser> GetTeamMembersDataForCalendar(long tLId)
+    {
+        var teamId = GetTeamIdFromUserId(tLId);
+        return _context.AspNetUsers.Include(x => x.TaskAssignedTos).Include(x => x.Teams).Where(x => x.TeamId == teamId);
+    }
+
     public IQueryable<AspNetUser> GetTeamUsersWithTasksFromTeamId(long teamId)
     {
         var temp = _context.Tasks.Include(x => x.AssignedTo).Include(x => x.CreatedBy)

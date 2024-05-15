@@ -8,16 +8,25 @@
 
         <div class="d-sm-flex justify-content-between align-items-center">
 
-            <div class="w-25 d-flex align-items-center">
+            @*<div class="w-25 d-flex align-items-center">
 
                 <div class="mb-2 mt-2 bg-white border border-end-0 pt-2 pb-1 ps-2">
                     <i class="fas fa-search "></i>
                 </div>
                 <select class="form-select Change2  border rounded-2 border-start-0 form-control " id="SelectedTeam"
                         name="SelectedTeam">
-                     <option selected>All Teams</option>
+                   
+                    <option selected>All Teams</option>
+                   
                 </select>
-            </div>
+            </div>*@
+
+            @*<div class="d-flex justify-content-around">
+                <a class="btn btn-info text-white me-2" asp-controller="Admin" asp-action="provider_oncall"> Provider On Call</a>
+                <a class="btn btn-info text-white me-2" asp-controller="Admin" asp-action="requested_shifts"> Shifts For Review</a>
+                <a class="btn btn-info text-white me-2" data-bs-toggle="modal" data-bs-target="#CreateShiftModal"> Add New Shifts</a>
+            </div>*@
+
         </div>
         <div>
             <div class="d-flex justify-content-between flex-wrap mt-3 mb-3">
@@ -36,7 +45,7 @@
                         </div>
                         <div class="align-items-center d-flex">
                             <span class="border rounded-2 border-success d-inline-block me-2" style="width:50px; height:30px; background-color:#a5cfa6 !important"></span>
-                            <span>Approved Tasks</span>
+                            <span>Completed Tasks</span>
                         </div>
                     </div>
                 </div>
@@ -77,4 +86,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js"></script>
 
-<script src="~/js/CalendarScript.js"></script>
+<script src="~/js/CalenderScriptTeamLead.js"></script>
