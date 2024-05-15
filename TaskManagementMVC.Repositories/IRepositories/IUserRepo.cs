@@ -10,9 +10,11 @@ namespace TaskManagementMVC.Repositories.IRepositories
 {
     public interface IUserRepo
     {
+        void AddUser(AspNetUser user);
         IQueryable<AspNetUser> GetTeamUsersFromTeamId(long teamId);
         AspNetUser GetUserByEmail(string email);
         AspNetUser GetUserFromUserId(long currentUserId);
         void ResetPassword(ResetPWDViewModel model);
+        void UpdateUser(AspNetUser user);
     }
 }

@@ -69,6 +69,8 @@ public class TeamLeadService : ITeamLeadService
         Entities.Models.Task task = _TaskRepo.GetTaskFromTaskId(taskId);
         var oldState = task.TaskStateId;
         task.TaskStateId = statusId;
+        task.IsCompleted = statusId == (short)TaskStateEnum.Completed ? true : false;
+        task.ModifiedBy = userId;
         _TaskRepo.UpdateTask(task);
         TaskLog taskLog = new()
         {

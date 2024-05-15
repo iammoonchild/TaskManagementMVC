@@ -19,6 +19,12 @@ namespace TaskManagementMVC.Repositories.Repositories
             _context = context;
         }
 
+        public void AddUser(AspNetUser user)
+        {
+            _context.AspNetUsers.Add(user);
+            _context.SaveChanges();
+        }
+
         public IQueryable<AspNetUser> GetTeamUsersFromTeamId(long teamId)
         {
             return _context.AspNetUsers.Include(x=>x.Team).Where(x => x.TeamId == teamId && (x.IsActive==true || x.IsActive == null));
@@ -42,6 +48,12 @@ namespace TaskManagementMVC.Repositories.Repositories
             user.Password = model.Passwords.Password;
             user.ModifiedDate = new DateOnly(DateTime.Now.Year,DateTime.Now.Month,DateTime.Now.Day);
             user.ModifiedBy = user.Id;
+            _context.Update(user);
+            _context.SaveChanges();
+        }
+
+        public void UpdateUser(AspNetUser user)
+        {
             _context.Update(user);
             _context.SaveChanges();
         }

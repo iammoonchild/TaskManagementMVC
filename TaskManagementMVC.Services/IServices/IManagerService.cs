@@ -11,6 +11,8 @@ namespace TaskManagementMVC.Services.IServices
 {
     public interface IManagerService
     {
+        void AddNewMember(MemberForm model);
+        void EditUser(int userId, int role, bool status);
         IEnumerable<TeamListingViewModel> GetTeamListing(int managerId);
         TeamMembersViewModel GetTeamMembersData(int ManagerId);
         TeamWorkDetailsViewModel GetTeamWorkDetails(int teamId);

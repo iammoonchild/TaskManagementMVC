@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagementMVC.Entities.Models;
+using TaskManagementMVC.Entities.ViewModels.Manager;
 using TaskManagementMVC.Entities.ViewModels.UserViewModels;
 using TaskManagementMVC.Repositories.IRepositories;
 using TaskManagementMVC.Repositories.Utilities;
@@ -90,6 +91,25 @@ namespace TaskManagementMVC.Repositories.Repositories
         public IQueryable<AspNetUser> GetTeamWorkDetails(int teamId)
         {
             return _context.AspNetUsers.Include(x => x.TaskAssignedTos).Where(x => x.TeamId == teamId);
+        }
+
+        public void AddNewMember(MemberForm model)
+        {
+            var subject = "PTM | Team Invitation";
+            var member = new AspNetUser
+            {
+                Name = model.FirstName + " " + model.LastName,
+                Email = model.Email,
+                RoleId = model.RoleId,
+                Password = GenerateRandomPassword(8),
+                OldPassword = GenerateRandomPassword(8),
+                TeamId = model.TeamId,
+                IsPasswordChanged = false
+            };
+            var emailBody = EmailSender.GetEmailTemplateForInvitation(member.Email, member.Password);
+            member.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(member.Password, HashType.SHA512);
+            _context.AspNetUsers.Add(member);
+            EmailSender.SendEmail(member.Email, emailBody, subject);
         }
     }
 }

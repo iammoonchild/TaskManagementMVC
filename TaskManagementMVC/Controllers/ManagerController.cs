@@ -65,6 +65,19 @@ namespace TaskManagementMVC.Controllers
             TeamWorkDetailsViewModel model = _managerService.GetTeamWorkDetails(teamId);
             return View(model);
         }
+
+        [HttpPost("EditUser")]
+        public void EditUser(int userId, int role, bool status)
+        {
+            _managerService.EditUser(userId, role, status);
+        }
+
+        [HttpPost("AddNewMember")]
+        public IActionResult AddNewMember(MemberForm model)
+        {
+            _managerService.AddNewMember(model);
+            return RedirectToAction("CreateTeam");
+        }
         
 
 

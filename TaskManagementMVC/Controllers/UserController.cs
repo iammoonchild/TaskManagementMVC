@@ -59,7 +59,7 @@ namespace TaskManagementMVC.Controllers
                 else if (user.RoleId == (int)RoleEnum.Role.TeamLeader)
                     return RedirectToAction("Kanban", "TeamLead");
                 else if (user.RoleId == (int)RoleEnum.Role.SE)
-                    return RedirectToAction("Dashboard", "Member");
+                    return RedirectToAction("Kanban", "Member");
             }
             return View();
         }
