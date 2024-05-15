@@ -93,6 +93,18 @@ namespace TaskManagementMVC.Repositories.Repositories
             return _context.AspNetUsers.Include(x => x.TaskAssignedTos).Where(x => x.TeamId == teamId);
         }
 
+        public IQueryable<AspNetUser> GetTeamMembersDataForCalendar(long pMId)
+        {
+            var data =  _context.Teams.Where(x => x.Pmid == pMId).Select(x => x.TeamId).ToList();
+            return _context.AspNetUsers.Include(x => x.TaskAssignedTos).Include(x => x.Teams).Where(x => data.Contains((long)x.TeamId));
+        }
+
+        public IQueryable<AspNetUser> GetTeamsForCalendar(long pMId)
+        {
+            var data = _context.Teams.Where(x => x.Pmid == pMId).Select(x => x.TeamId).ToList();
+            return _context.AspNetUsers.Include(x => x.Teams).Where(x => data.Contains((long)x.TeamId) && x.RoleId == 2);
+        }
+
         public void AddNewMember(MemberForm model)
         {
             var subject = "PTM | Team Invitation";
