@@ -141,19 +141,10 @@ document.getElementById("SelectedTeam").addEventListener("change", function () {
 });
 
 
-function ViewShift(ShiftDetailId) {
-    $.ajax({
-        type: "GET",
-        url: "/Admin/ViewShift",
-        data: { ShiftDetailId },
-        success: function (data) {
-            $("#ViewShift").html(data);
-            $("#ViewShiftModal").modal("show");
-        },
-        error: function (data) {
-            alert("Cannot Fetch Shift Details");
-        }
-    })
+function ViewShift(taskId) {
+    
+            window.location.href = "/Task/TaskDetails/" + taskId;
+        
 
 }
 
