@@ -154,24 +154,42 @@
             <!-- Navbar items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Dashboard", currentController)" onclick="setActiveNavItem(3)">
-                            <i class="bi bi-house-door me-2"></i>
-                            <span class="d-lg-inline-block text-white">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("MyTeams", currentController)" onclick="setActiveNavItem(4)">
-                            <i class="bi bi-people me-2"></i>
-                            <span class="d-lg-inline-block text-white">My Teams</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Calendar", currentController)" onclick="setActiveNavItem(5)">
-                            <i class="bi bi-calendar3 me-2"></i>
-                            <span class="d-lg-inline-block text-white">My Calendar</span>
-                        </a>
-                    </li>
+                    @if (currentController != "Member")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Dashboard", currentController)" onclick="setActiveNavItem(3)">
+                                <i class="bi bi-house-door me-2"></i>
+                                <span class="d-lg-inline-block text-white">Dashboard</span>
+                            </a>
+                        </li>
+                    }
+                    @if (currentController == "TeamLead" || currentController == "Member")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Kanban", currentController)" onclick="setActiveNavItem(4)">
+                                <i class="bi bi-people me-2"></i>
+                                <span class="d-lg-inline-block text-white">Kanban</span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("MyTeams", currentController)" onclick="setActiveNavItem(4)">
+                                <i class="bi bi-people me-2"></i>
+                                <span class="d-lg-inline-block text-white">My Teams</span>
+                            </a>
+                        </li>
+                    }
+                    @if (currentController != "Member")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Calendar", currentController)" onclick="setActiveNavItem(5)">
+                                <i class="bi bi-calendar3 me-2"></i>
+                                <span class="d-lg-inline-block text-white">My Calendar</span>
+                            </a>
+                        </li>
+                    }
                     <!-- Add more navbar items as needed -->
                 </ul>
                 <!-- Notification and profile icons for mobile view -->
