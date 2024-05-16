@@ -130,7 +130,7 @@
 
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 <script>
-
+    localStorage.setItem('Dashboard', "Dashboard");
     //to add new task submit form
     document.getElementById("addTaskForm").addEventListener("submit", function (event) {
         event.preventDefault();
@@ -171,8 +171,7 @@
 
     // ****************************  filter script *****************************************
     $(document).ready(function () {
-        localStorage.setItem('Dashboard', "Dashboard");
-        localStorage.setItem('RoleMember', "Member");
+        
         $('#kanban-search-input').on('blur', function () {
             var value = $(this).val().toLowerCase();
             //find button who is having text as $('#filterDropdown').text and get the data-filter attribute value

@@ -15,7 +15,7 @@ namespace TaskManagementMVC.Entities.ViewModels.UserViewModels
         public List<string> LastName { get; set; }
         public List<string> Email { get; set; }
         public List<string> Role { get; set; }
-
+        public int TeamId { get; set; } = 0;
         public List<TeamMembersDataViewModel> GetTeamMembersData { get; set; }
     }
 

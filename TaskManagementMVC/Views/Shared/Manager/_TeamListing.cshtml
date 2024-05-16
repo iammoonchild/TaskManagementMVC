@@ -17,7 +17,8 @@
     </div>
     <div class="team-listing-wrapper row">
         @foreach (var team in Model)
-    {
+        {
+            
         <div class="item col-md-6 col-sm-12 col-lg-4 my-4" onclick="gotoTeamWorkDetails(@team.TeamId)">
             <div class="card card-to-hover thumbnail shadow card-to-scale">
                 <div class="card card-hover-overlay">
@@ -99,20 +100,21 @@
                                 <select class="form-select" name="Role[]" required>
                                     <option value="">Select Role</option>
                                     <option value="2">Team Lead</option>
-                                    <option value="3">Member</option>
+                                    <option value="3">Team Member</option>
                                 </select>
                                 <label for="Role[]">Role</label>
 
                             </div>
                         </div>
                     </div>
+                    
                     <div class="text-end">
                         <button type="button" class="btn btn-primary" id="addMore">Add More</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="saveTeamMembers">Save changes</button>
             </div>
         </div>

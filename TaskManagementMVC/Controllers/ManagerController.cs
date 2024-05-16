@@ -23,10 +23,10 @@ namespace TaskManagementMVC.Controllers
             _httpContextAccessor = http;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         [Route("Dashboard")]
         public IActionResult Dashboard()
@@ -60,7 +60,7 @@ namespace TaskManagementMVC.Controllers
         {
             long PMId = long.Parse(_httpContextAccessor.HttpContext.Session.GetString("userId"));
             _managerService.SetTeamMembersData(viewModel, PMId);
-            return RedirectToAction("GetTeamListing",new {managerId = 6});
+            return RedirectToAction("GetTeamListing",new {managerId = PMId });
         }
         [Route("MyTeams/{teamId}")]
         public IActionResult TeamWorkDetails([FromRoute] int teamId)
@@ -79,7 +79,7 @@ namespace TaskManagementMVC.Controllers
         public IActionResult AddNewMember(MemberForm model)
         {
             _managerService.AddNewMember(model);
-            return RedirectToAction("CreateTeam");
+            return RedirectToAction("TeamWorkDetails", new { TeamId = model.TeamId });
         }
         
 

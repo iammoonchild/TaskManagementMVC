@@ -53,7 +53,7 @@ namespace TaskManagementMVC.Controllers
                 {
                     return RedirectToAction("ResetPasswordByUser");
                 }
-
+                _httpContextAccessor.HttpContext.Session.SetString("Username", user.Name);
                 if (user.RoleId == (int)RoleEnum.Role.PM)
                     return RedirectToAction("MyTeams", "Manager");
                 else if (user.RoleId == (int)RoleEnum.Role.TeamLeader)

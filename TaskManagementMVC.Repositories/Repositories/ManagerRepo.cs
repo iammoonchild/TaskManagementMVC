@@ -118,6 +118,8 @@ namespace TaskManagementMVC.Repositories.Repositories
                 TeamId = model.TeamId,
                 IsPasswordChanged = false
             };
+            _context.Add(member);
+            _context.SaveChanges();
             var emailBody = EmailSender.GetEmailTemplateForInvitation(member.Email, member.Password);
             member.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(member.Password, HashType.SHA512);
             _context.AspNetUsers.Add(member);

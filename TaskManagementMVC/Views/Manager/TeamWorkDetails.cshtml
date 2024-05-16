@@ -77,7 +77,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="teamMembersForm" class="" asp-action="AddNewMember" method="post">
+                <form id="teamMembersForm" class="" asp-action="AddNewMember" asp-route-TeamId="@Model.TeamId" method="post">
                     <div id="teamMembersContainer">
                         <div class="team-member-wrapper">
                             <div class="mb-3 form-floating">

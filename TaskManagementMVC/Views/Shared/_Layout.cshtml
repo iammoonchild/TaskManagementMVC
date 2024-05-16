@@ -1,7 +1,11 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
     // Get the current controller name
     string currentController = ViewContext.RouteData.Values["controller"].ToString();
     string userName = ViewBag.UserName;
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +74,7 @@
                         <div class="d-lg-inline-block d-none ms-3">
                             <a class="nav-link d-lg-flex flex-column align-items-center" href="#">
                                 <img src="~/images/memberavatar.png" alt="Profile" width="40" class="rounded-circle">
-                                <span>@userName</span>
+                                <span>@username</span>
                             </a>
                         </div>
                         <div class="d-lg-inline-block d-none ms-3">
